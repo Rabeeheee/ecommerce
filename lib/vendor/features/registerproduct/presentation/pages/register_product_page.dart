@@ -1,4 +1,3 @@
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,28 +99,32 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   @override
   Widget build(BuildContext context) {
     // print('I am here');
-    Future<bool> deleteProduct(
-        {required Product product,
-        required Map<int, List<model.Image>> listOfImagesLinks}) async {
+    Future<bool> deleteProduct({
+      required Product product,
+      required Map<int, List<model.Image>> listOfImagesLinks,
+    }) async {
       final boolean = await showConfirmationDialog(
-          context,
-          'Delete This Product',
-          'Are You Sure You Want To Delete this Product Forever', () {
-        context.read<RegisterProductBloc>().add(
-              DeleteTheProductEvent(
-                product: widget.product!,
-                mapOfListOfImages: listOfImagesLinks,
-              ),
-            );
-      });
+        context,
+        'Delete This Product',
+        'Are You Sure You Want To Delete this Product Forever',
+        () {
+          context.read<RegisterProductBloc>().add(
+            DeleteTheProductEvent(
+              product: widget.product!,
+              mapOfListOfImages: listOfImagesLinks,
+            ),
+          );
+        },
+      );
       return boolean!;
     }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // if (!RegisterProductBloc.isCategoryLoaded) {print('I am here');
       // If data is not loaded and not loading, fetch the data
-      BlocProvider.of<RegisterProductBloc>(context)
-          .add(GetAllCategoryEvent(refreshPage: false));
+      BlocProvider.of<RegisterProductBloc>(
+        context,
+      ).add(GetAllCategoryEvent(refreshPage: false));
       // }
       // if (!RegisterProductBloc.isBrandLoaded) {
       //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());
@@ -138,15 +141,16 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
         // }
         if (state is NewProductRegisteredSuccess) {
           Fluttertoast.showToast(
-              msg: "The Product is Registered Successfully",
-              toastLength: Toast.LENGTH_SHORT,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          context
-              .read<ManageProductBloc>()
-              .add(const GetAllProductsEventForManage());
+            msg: "The Product is Registered Successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          context.read<ManageProductBloc>().add(
+            const GetAllProductsEventForManage(),
+          );
           GoRouter.of(context).pop();
         }
         if (state is NewProductRegisteredFailed) {
@@ -160,14 +164,16 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
         if (state is DeleteProductSuccess) {
           Fluttertoast.showToast(
-              msg: "The Product is Deleted Successfully",
-              toastLength: Toast.LENGTH_SHORT,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          BlocProvider.of<ManageProductBloc>(context)
-              .add(const GetAllProductsEventForManage());
+            msg: "The Product is Deleted Successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          BlocProvider.of<ManageProductBloc>(
+            context,
+          ).add(const GetAllProductsEventForManage());
 
           GoRouter.of(context).pop();
         }
@@ -194,8 +200,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             productOldPrizeTextEditingController.text =
                 widget.product!.oldPrize.toString();
             colorTextEditingController.text = widget.product!.color;
-            selectedBrandIndex[0] = allBrands
-                .indexWhere((element) => element.id == widget.product!.brandID);
+            selectedBrandIndex[0] = allBrands.indexWhere(
+              (element) => element.id == widget.product!.brandID,
+            );
             productNameTextEditingController.text = widget.product!.name;
             productPrizeTextEditingController.text =
                 widget.product!.prize.toString();
@@ -207,52 +214,52 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             shippingChargeController.text =
                 widget.product!.shippingCharge.toString();
             categoryIndexes[0] = allCategories.indexWhere(
-                (element) => element.id == widget.product!.mainCategoryID);
+              (element) => element.id == widget.product!.mainCategoryID,
+            );
             categoryIndexes[1] = allCategories[categoryIndexes[0]!]
                 .subCategories
                 .indexWhere(
-                    (element) => element.id == widget.product!.subCategoryID);
+                  (element) => element.id == widget.product!.subCategoryID,
+                );
             specifications = widget.product!.specifications ?? {};
             categoryIndexes[2] = allCategories[categoryIndexes[0]!]
                 .subCategories[categoryIndexes[1]!]
                 .subCategories
-                .indexWhere((element) =>
-                    element.id == widget.product!.variantCategoryID);
-            context.read<GetImagesBloc>().add(GetImagesForTheProductEvent(
-                  productID: widget.product!.productID,
-                ));
+                .indexWhere(
+                  (element) => element.id == widget.product!.variantCategoryID,
+                );
+            context.read<GetImagesBloc>().add(
+              GetImagesForTheProductEvent(productID: widget.product!.productID),
+            );
           } else {
             selectedBrandIndex[0] = null;
           }
           return Scaffold(
-              appBar: VendorAppBar(
-                title: widget.product != null
-                    ? 'Update The Product'
-                    : 'Register New Product',
-                bottom: null,
-                // messageIcon: widget.product != null ? false : true,
-                trailingIcon:
-                    widget.product != null ? CustomIcons.trashBinSvg : null,
-                onPressedTrailingIcon: () {
-                  deleteProduct(
-                    product: widget.product!,
-                    listOfImagesLinks: listOfImagesLinks!,
-                  );
-                },
-              ),
-              body: SingleChildScrollView(
-                  child: Container(
-                padding: const EdgeInsets.all(
-                  8,
-                ),
+            appBar: VendorAppBar(
+              title:
+                  widget.product != null
+                      ? 'Update The Product'
+                      : 'Register New Product',
+              bottom: null,
+              // messageIcon: widget.product != null ? false : true,
+              trailingIcon:
+                  widget.product != null ? CustomIcons.trashBinSvg : null,
+              onPressedTrailingIcon: () {
+                deleteProduct(
+                  product: widget.product!,
+                  listOfImagesLinks: listOfImagesLinks!,
+                );
+              },
+            ),
+            body: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(8),
                 child: Form(
                   key: globalFormKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const GlobalTitleText(
-                        title: 'General',
-                      ),
+                      const GlobalTitleText(title: 'General'),
                       Constants.kHeight,
                       BrandDropDown(
                         allBrandsModel: allBrands,
@@ -277,11 +284,12 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                               validator: Validator.validateEmptyField,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
+                                    decimal: true,
+                                  ),
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d*\.?\d{0,2}$')),
+                                  RegExp(r'^\d*\.?\d{0,2}$'),
+                                ),
                               ],
                             ),
                           ),
@@ -295,11 +303,12 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                               validator: Validator.validateEmptyField,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
+                                    decimal: true,
+                                  ),
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d*\.?\d{0,2}$')),
+                                  RegExp(r'^\d*\.?\d{0,2}$'),
+                                ),
                               ],
                             ),
                           ),
@@ -344,19 +353,20 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       Constants.kHeight,
                       const SubText(subText: 'Specifications'),
                       Column(
-  children: [
-    if (specifications.isEmpty || specifications.values.any((value) => value.isEmpty))
-      const ErrorTextWidget(
-        errorText: "Every name and its specification should be filled...",
-      ),
-    ...specifications.entries.map((entry) {
-      return Text("${entry.key}: ${entry.value}");
-    }).toList(),
-  ],
-),
-
-
-                      
+                        children: [
+                          if (specifications.isEmpty ||
+                              specifications.values.any(
+                                (value) => value.isEmpty,
+                              ))
+                            const ErrorTextWidget(
+                              errorText:
+                                  "Every name and its specification should be filled...",
+                            ),
+                          ...specifications.entries.map((entry) {
+                            return Text("${entry.key}: ${entry.value}");
+                          }).toList(),
+                        ],
+                      ),
 
                       DynamicForm(
                         onFormChanged: handleFormData,
@@ -370,63 +380,61 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       //     specificationTextFormFields:
                       //         specificationTextFormFields),
                       Constants.kHeight,
-                      const GlobalTitleText(
-                        title: 'Shipping',
-                      ),
+                      const GlobalTitleText(title: 'Shipping'),
                       Constants.kHeight,
                       ValueListenableBuilder(
-                          valueListenable: shippingChargeBool,
-                          builder: (context, shippingBool, child) {
-                            // shippingBool == false
-                            //     ? shippingChargeController.text = '0'
-                            //     : null;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Charge Shipping',
-                                      style: TextStyle(fontSize: 16.0),
-                                    ),
-                                    const SizedBox(width: 10.0),
-                                    Checkbox(
-                                      value: shippingBool,
-                                      onChanged: (value) {
-                                        shippingChargeBool.value = value!;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                if (shippingBool)
-                                  CustomTextFormField(
-                                    // onChanged: (p0) {
-                                    //   print(shippingChargeController.text);
-                                    //   print(double.parse(
-                                    //       shippingChargeController.text));
-                                    // },
-                                    labelText: 'Shipping Charge.',
-                                    hintText: 'Shipping Charge.',
-                                    textEditingController:
-                                        shippingChargeController,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly
-                                    ],
-                                    validator: shippingBool
-                                        ? Validator.validateEmptyField
-                                        : null,
-                                    durationMilliseconds: 150,
+                        valueListenable: shippingChargeBool,
+                        builder: (context, shippingBool, child) {
+                          // shippingBool == false
+                          //     ? shippingChargeController.text = '0'
+                          //     : null;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Charge Shipping',
+                                    style: TextStyle(fontSize: 16.0),
                                   ),
-                              ],
-                            );
-                          }),
-                      Constants.kHeight,
-                      const GlobalTitleText(
-                        title: 'Attribute',
+                                  const SizedBox(width: 10.0),
+                                  Checkbox(
+                                    value: shippingBool,
+                                    onChanged: (value) {
+                                      shippingChargeBool.value = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                              if (shippingBool)
+                                CustomTextFormField(
+                                  // onChanged: (p0) {
+                                  //   print(shippingChargeController.text);
+                                  //   print(double.parse(
+                                  //       shippingChargeController.text));
+                                  // },
+                                  labelText: 'Shipping Charge.',
+                                  hintText: 'Shipping Charge.',
+                                  textEditingController:
+                                      shippingChargeController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  validator:
+                                      shippingBool
+                                          ? Validator.validateEmptyField
+                                          : null,
+                                  durationMilliseconds: 150,
+                                ),
+                            ],
+                          );
+                        },
                       ),
+                      Constants.kHeight,
+                      const GlobalTitleText(title: 'Attribute'),
                       CustomTextFormField(
                         labelText: 'Color Name',
                         hintText: 'Color Name',
@@ -437,10 +445,11 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                         listener: (context, state) {
                           if (state is GetImagesForRegisterProductFailed) {
                             showSnackBar(
-                                context: context,
-                                title: 'Oh',
-                                content: state.message,
-                                contentType: ContentType.failure);
+                              context: context,
+                              title: 'Oh',
+                              content: state.message,
+                              contentType: ContentType.failure,
+                            );
                           }
                         },
                         // buildWhen: (previous, current) =>
@@ -466,13 +475,12 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                         },
                       ),
                       if (widget.product != null)
-                        const GlobalTitleText(
-                          title: 'Update Current Images',
-                        ),
+                        const GlobalTitleText(title: 'Update Current Images'),
                       if (widget.product != null)
                         const ErrorTextWidget(
-                            errorText:
-                                "Your old images of this product will be replaced by the new images"),
+                          errorText:
+                              "Your old images of this product will be replaced by the new images",
+                        ),
                       if (widget.product != null)
                         AddImagesWidget(
                           productImages: productImages,
@@ -517,79 +525,92 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                             child: RoundedRectangularButton(
                               title:
                                   widget.product != null ? 'Update' : 'Publish',
-                             onPressed: () {
-  print("Form Valid: ${globalFormKey.currentState!.validate()}");
-  print("Category Indexes: $categoryIndexes");
-  print("Selected Brand Index: $selectedBrandIndex");
-  print("Specifications: $specifications");
-  print("Product Images Length: ${productImages.length}");
+                              onPressed: () {
+                                print(
+                                  "Form Valid: ${globalFormKey.currentState!.validate()}",
+                                );
+                                print("Category Indexes: $categoryIndexes");
+                                print(
+                                  "Selected Brand Index: $selectedBrandIndex",
+                                );
+                                print("Specifications: $specifications");
+                                print(
+                                  "Product Images Length: ${productImages.length}",
+                                );
 
-  if (widget.product != null &&
-      globalFormKey.currentState!.validate() &&
-      categoryIndexes[0] != null &&
-      categoryIndexes[1] != null &&
-      categoryIndexes[2] != null &&
-      specifications.isNotEmpty) {
-    if (listOfImagesLinks!.length.compareTo(deletedImagesIndex.length) > 0 ||
-        productImages.isNotEmpty) {
-      print("Updating product...");
-      updateTheProduct();
-    } else {
-      showSnackBar(
-        context: context,
-        title: 'Images',
-        content: 'There must be at least one Image for the product',
-        contentType: ContentType.warning,
-      );
-    }
-  } else if (globalFormKey.currentState!.validate() &&
-      categoryIndexes[0] != null &&
-      categoryIndexes[1] != null &&
-      categoryIndexes[2] != null &&
-      selectedBrandIndex[0] != null &&
-      productImages.isNotEmpty &&
-      specifications.isNotEmpty) {
-    print("Registering new product...");
-    registerNewProduct(isPublished: true);
-  } else {
-    print("Validation failed");
-    if (productImages.isEmpty) {
-      showSnackBar(
-        context: context,
-        title: 'Images',
-        content: 'Please Upload Product Images',
-        contentType: ContentType.warning,
-      );
-    }
-    if (categoryIndexes[0] == null &&
-        categoryIndexes[1] == null &&
-        categoryIndexes[2] == null) {
-      showSnackBar(
-        context: context,
-        title: 'Categories',
-        content: 'Please Select the Categories',
-        contentType: ContentType.warning,
-      );
-    }
-    if (specifications.isEmpty) {
-      showSnackBar(
-        context: context,
-        title: 'Specifications',
-        content: 'Give the Specifications to Products',
-        contentType: ContentType.warning,
-      );
-    }
-  }
-},
-
+                                if (widget.product != null &&
+                                    globalFormKey.currentState!.validate() &&
+                                    categoryIndexes[0] != null &&
+                                    categoryIndexes[1] != null &&
+                                    categoryIndexes[2] != null &&
+                                    specifications.isNotEmpty) {
+                                  if (listOfImagesLinks!.length.compareTo(
+                                            deletedImagesIndex.length,
+                                          ) >
+                                          0 ||
+                                      productImages.isNotEmpty) {
+                                    print("Updating product...");
+                                    updateTheProduct();
+                                  } else {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Images',
+                                      content:
+                                          'There must be at least one Image for the product',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                } else if (globalFormKey.currentState!
+                                        .validate() &&
+                                    categoryIndexes[0] != null &&
+                                    categoryIndexes[1] != null &&
+                                    categoryIndexes[2] != null &&
+                                    selectedBrandIndex[0] != null &&
+                                    productImages.isNotEmpty &&
+                                    specifications.isNotEmpty) {
+                                  print("Registering new product...");
+                                  registerNewProduct(isPublished: true);
+                                } else {
+                                  print("Validation failed");
+                                  if (productImages.isEmpty) {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Images',
+                                      content: 'Please Upload Product Images',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                  if (categoryIndexes[0] == null &&
+                                      categoryIndexes[1] == null &&
+                                      categoryIndexes[2] == null) {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Categories',
+                                      content: 'Please Select the Categories',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                  if (specifications.isEmpty) {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Specifications',
+                                      content:
+                                          'Give the Specifications to Products',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                }
+                              },
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )));
+              ),
+            ),
+          );
         }
         return const SizedBox();
       },
@@ -599,97 +620,103 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   void updateTheProduct() {
     // print(productImages.length);
     Product product = widget.product!;
-    context.read<RegisterProductBloc>().add(UpdateExistingProductEvent(
-          product: product,
-          brandName: allBrands[selectedBrandIndex[0]!].categoryName,
-          brandID: allBrands[selectedBrandIndex[0]!].id,
-          specifications: specifications,
-          productName: productNameTextEditingController.text,
-          productPrize: double.parse(productPrizeTextEditingController.text),
-          productOldPrize:
-              double.parse(productOldPrizeTextEditingController.text),
-          productQuantity: int.parse(productQuantityTextEditingController.text),
-          mainCategory: allCategories[categoryIndexes[0]!].categoryName,
-          mainCategoryID: allCategories[categoryIndexes[0]!].id,
-          subCategory: allCategories[categoryIndexes[0]!]
-              .subCategories[categoryIndexes[1]!]
-              .categoryName,
-          subCategoryID: allCategories[categoryIndexes[0]!]
-              .subCategories[categoryIndexes[1]!]
-              .id,
-          variantCategory: allCategories[categoryIndexes[0]!]
-              .subCategories[categoryIndexes[1]!]
-              .subCategories[categoryIndexes[2]!]
-              .categoryName,
-          variantCategoryID: allCategories[categoryIndexes[0]!]
-              .subCategories[categoryIndexes[1]!]
-              .subCategories[categoryIndexes[2]!]
-              .id,
-          productOverview: productOverviewTextEditingController.text,
-          shippingCharge: double.parse(shippingChargeController.text),
-          productImages: productImages,
-          color: colorTextEditingController.text,
-          deleteImagesIndexes: deletedImagesIndex,
-          isPublished: widget.product!.isPublished,
-        ));
+    context.read<RegisterProductBloc>().add(
+      UpdateExistingProductEvent(
+        product: product,
+        brandName: allBrands[selectedBrandIndex[0]!].categoryName,
+        brandID: allBrands[selectedBrandIndex[0]!].id,
+        specifications: specifications,
+        productName: productNameTextEditingController.text,
+        productPrize: double.parse(productPrizeTextEditingController.text),
+        productOldPrize: double.parse(
+          productOldPrizeTextEditingController.text,
+        ),
+        productQuantity: int.parse(productQuantityTextEditingController.text),
+        mainCategory: allCategories[categoryIndexes[0]!].categoryName,
+        mainCategoryID: allCategories[categoryIndexes[0]!].id,
+        subCategory:
+            allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .categoryName,
+        subCategoryID:
+            allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .id,
+        variantCategory:
+            allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .subCategories[categoryIndexes[2]!]
+                .categoryName,
+        variantCategoryID:
+            allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .subCategories[categoryIndexes[2]!]
+                .id,
+        productOverview: productOverviewTextEditingController.text,
+        shippingCharge: double.parse(shippingChargeController.text),
+        productImages: productImages,
+        color: colorTextEditingController.text,
+        deleteImagesIndexes: deletedImagesIndex,
+        isPublished: widget.product!.isPublished,
+      ),
+    );
   }
 
   void registerNewProduct({required bool isPublished}) {
     // print(allBrands[selectedBrandIndex[0]!].id);
     context.read<RegisterProductBloc>().add(
-          RegisterNewProductEvent(
-            color: colorTextEditingController.text,
-            brandName: allBrands[selectedBrandIndex[0]!].categoryName,
-            brandID: allBrands[selectedBrandIndex[0]!].id,
-            productName: productNameTextEditingController.text,
-            productPrize: double.parse(productPrizeTextEditingController.text),
-            productOldPrize:
-                double.parse(productOldPrizeTextEditingController.text),
-            productQuantity:
-                int.parse(productQuantityTextEditingController.text),
-            specifications: specifications,
-            mainCategory: allCategories[categoryIndexes[0]!].categoryName,
-            mainCategoryID: allCategories[categoryIndexes[0]!].id,
-            subCategory: allCategories[categoryIndexes[0]!]
+      RegisterNewProductEvent(
+        color: colorTextEditingController.text,
+        brandName: allBrands[selectedBrandIndex[0]!].categoryName,
+        brandID: allBrands[selectedBrandIndex[0]!].id,
+        productName: productNameTextEditingController.text,
+        productPrize: double.parse(productPrizeTextEditingController.text),
+        productOldPrize: double.parse(
+          productOldPrizeTextEditingController.text,
+        ),
+        productQuantity: int.parse(productQuantityTextEditingController.text),
+        specifications: specifications,
+        mainCategory: allCategories[categoryIndexes[0]!].categoryName,
+        mainCategoryID: allCategories[categoryIndexes[0]!].id,
+        subCategory:
+            allCategories[categoryIndexes[0]!]
                 .subCategories[categoryIndexes[1]!]
                 .categoryName,
-            subCategoryID: allCategories[categoryIndexes[0]!]
+        subCategoryID:
+            allCategories[categoryIndexes[0]!]
                 .subCategories[categoryIndexes[1]!]
                 .id,
-            variantCategory: allCategories[categoryIndexes[0]!]
+        variantCategory:
+            allCategories[categoryIndexes[0]!]
                 .subCategories[categoryIndexes[1]!]
                 .subCategories[categoryIndexes[2]!]
                 .categoryName,
-            variantCategoryID: allCategories[categoryIndexes[0]!]
+        variantCategoryID:
+            allCategories[categoryIndexes[0]!]
                 .subCategories[categoryIndexes[1]!]
                 .subCategories[categoryIndexes[2]!]
                 .id,
-            productOverview: productOverviewTextEditingController.text,
-            shippingCharge: shippingChargeController.text.isEmpty
+        productOverview: productOverviewTextEditingController.text,
+        shippingCharge:
+            shippingChargeController.text.isEmpty
                 ? 0.01
                 : double.parse(shippingChargeController.text),
-            productImages: productImages,
-            isPublished: isPublished,
-          ),
-        );
+        productImages: productImages,
+        isPublished: isPublished,
+      ),
+    );
   }
 }
 
 class ErrorTextWidget extends StatelessWidget {
-  const ErrorTextWidget({
-    super.key,
-    required this.errorText,
-  });
+  const ErrorTextWidget({super.key, required this.errorText});
   final String errorText;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       errorText,
-      style: const TextStyle(
-        color: Colors.red,
-        fontSize: 10,
-      ),
+      style: const TextStyle(color: Colors.red, fontSize: 10),
     );
   }
 }
