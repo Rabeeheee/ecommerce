@@ -299,18 +299,18 @@ class AppRoutes {
           );
         },
       ),
-      // _buildPageRouteWithParams(
-      //   name: AppRouteConstants.vendorOrderDetailsPage,
-      //   path: '/vendor_order_details_page',
-      //   pageBuilder: (state) {
-      //     model.Order order = state.extra as model.Order;
-      //     return VendorOrderDetailsPage(
-      //       order: order,
-      //       // cartID:cartID ,
-      //       // favoriteID: favoriteID,
-      //     );
-      //   },
-      // ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.vendorOrderDetailsPage,
+        path: '/vendor_order_details_page',
+        pageBuilder: (state) {
+          model.Order order = state.extra as model.Order;
+          return VendorOrderDetailsPage(
+            order: order,
+            // cartID:cartID ,
+            // favoriteID: favoriteID,
+          );
+        },
+      ),
       _buildPageRouteWithParams(
         name: AppRouteConstants.userOrderDetailsPage,
         path: '/user_order_details_page',

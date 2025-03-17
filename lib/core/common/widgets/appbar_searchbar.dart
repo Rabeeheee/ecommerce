@@ -22,7 +22,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   const AppBarSearchBar({
     super.key,
     this.isForSliver = false,
-    this.hintText = 'What are you looking for ?',
+    this.hintText = 'What are you looking for?',
     this.favouriteIconNeeded = true,
     this.deliveryPlaceNeeded = true,
     this.backButton = false,
@@ -32,113 +32,153 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-Widget build(BuildContext context) {
-  context.read<CommonBloc>().add(GetUserLocationDataEvent());
+  Widget build(BuildContext context) {
+    context.read<CommonBloc>().add(GetUserLocationDataEvent());
 
-  return SingleChildScrollView(
-    child: Container(
-      color: isForSliver ? const Color.fromARGB(0, 174, 0, 0) : const Color.fromARGB(255, 18, 1, 1),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(  
+    return SingleChildScrollView(
+      child: Container(
+        color: isForSliver ? Colors.transparent : Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (backButton) const CustomBackButton(),
-                SizedBox(width: 10,),
-                Expanded( 
+                if (backButton) const SizedBox(width: 8),
+                Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      GoRouter.of(context).pushNamed(AppRouteConstants.searchPage);
+                      GoRouter.of(
+                        context,
+                      ).pushNamed(AppRouteConstants.searchPage);
                     },
-                    child: TextField(
-                      onChanged: onChanged,
-                      enabled: enabled,
-                      decoration: AppTheme.inputDecoration.copyWith(hintText: hintText),
-                      autofocus: autoFocus,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: AppPallete.lightgreyColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.search,
+                            color: AppPallete.greyTextColor,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              onChanged: onChanged,
+                              enabled: enabled,
+                              decoration: InputDecoration(
+                                hintText: hintText,
+                                border: InputBorder.none,
+                              ),
+                              autofocus: autoFocus,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                favouriteIconNeeded
-                    ? GestureDetector(
-                        onTap: () {
-                          GoRouter.of(context).pushNamed(AppRouteConstants.favoritePage);
-                        },
-                        child: const SvgIcon(
-                          icon: CustomIcons.heartSvg,
-                          radius: 30,
-                          color: AppPallete.greyTextColor,
-                        ),
-                      )
-                    : const SizedBox()
-              ],
-            ),
-            deliveryPlaceNeeded
-                ? GestureDetector(
-                    // onTap: () {
-                    //   GoRouter.of(context).pushNamed(AppRouteConstants.googleMapPage);
-                    // },
+                if (favouriteIconNeeded) ...[
+                  const SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(
+                        context,
+                      ).pushNamed(AppRouteConstants.favoritePage);
+                    },
                     child: Container(
-                      padding: const EdgeInsets.only(top: 5),
-                      height: 30,
-                      child: BlocConsumer<CommonBloc, CommonState>(
-                        listener: (context, state) {
-                          if (state is LocationFailedState) {
-                            Fluttertoast.showToast(msg: state.message);
-                          }
-                        },
-                        builder: (context, state) {
-                          return Row(
-                            children: [
-                              const SvgIcon(
-                                icon: CustomIcons.mapPinSvg,
-                                radius: 15,
-                                fit: BoxFit.scaleDown,
-                                color: Color.fromARGB(255, 122, 122, 122),
-                              ),
-                              SizedBox(width: 10,),
-                              const Text(
-                                'Delivering to',
-                                style: TextStyle(fontSize: 13, color: Color.fromARGB(255, 122, 122, 122)),
-                              ),
-                              Expanded( 
-                                child: Text(
-                                  state is LocationSuccessState && state.location != null
-                                      ? '\t ${state.location!.location}'
-                                      : "Click here to enter your location",
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Color.fromARGB(255, 122, 122, 122),
-                                    fontWeight: FontWeight.w700,
-                                    overflow: TextOverflow.ellipsis,
-                                    
-                                  ),
-                                ),
-                              ),
-                              const SvgIcon(
-                                icon: CustomIcons.chevronDownSvg,
-                                radius: 25,
-                                color: Color.fromARGB(255, 122, 122, 122),
-                              ),
-                            ],
-                          );
-                        },
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppPallete.lightgreyColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const SvgIcon(
+                        icon: CustomIcons.heartSvg,
+                        radius: 20,
+                        color: AppPallete.greyTextColor,
                       ),
                     ),
-                  )
-                : const SizedBox()
+                  ),
+                ],
+              ],
+            ),
+            if (deliveryPlaceNeeded) const SizedBox(height: 10),
+            if (deliveryPlaceNeeded)
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).pushNamed(AppRouteConstants.googleMapPage);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppPallete.lightgreyColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: BlocConsumer<CommonBloc, CommonState>(
+                    listener: (context, state) {
+                      if (state is LocationFailedState) {
+                        Fluttertoast.showToast(msg: state.message);
+                      }
+                    },
+                    builder: (context, state) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 1,
+                            ), 
+                            child: const SvgIcon(
+                              icon: CustomIcons.mapPinSvg,
+                              radius:
+                                  20,
+                              color: AppPallete.greyTextColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Delivering to:',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppPallete.greyTextColor,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              state is LocationSuccessState &&
+                                      state.location != null
+                                  ? '${state.location!.location}'
+                                  : "Click here to enter your location", overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          const SvgIcon(
+                            icon: CustomIcons.chevronDownSvg,
+                            radius: 20,
+                            color: AppPallete.greyTextColor,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
           ],
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   @override
-  Size get preferredSize => const Size(double.infinity, 100);
+  Size get preferredSize => const Size(double.infinity, 110);
 }
-

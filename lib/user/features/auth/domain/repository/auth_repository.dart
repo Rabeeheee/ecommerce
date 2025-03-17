@@ -37,7 +37,7 @@ abstract interface class AuthRepository {
   // });
 
   Future<Either<Failure, bool>> createUser({
-    required dynamic? image,
+    required dynamic image,
     required String username,
     
   required String currency,
