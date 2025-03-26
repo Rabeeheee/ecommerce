@@ -9,58 +9,60 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/sum.dart';
 
 class OrderTile extends StatelessWidget {
-  const OrderTile(
-      {super.key, required this.order, required this.onTap, required this.isUser, this.onPressedDeliverButton
-      // required this.listOfProductsModel,
-      });
+  const OrderTile({
+    super.key, 
+    required this.order, 
+    required this.onTap, 
+    required this.isUser, 
+    this.onPressedDeliverButton,
+  });
 
   final void Function()? onPressedDeliverButton;
-  // final List<Product> listOfProductsModel;
   final bool isUser;
   final model.Order order;
   final void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(
-          10,
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.black12, width: 0.5),
+          borderRadius: BorderRadius.circular(8),
         ),
-        decoration: const BoxDecoration(
-          color: AppPallete.darkgreyColor,
-        ),
-        //the whole container column
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //row for the first bar
+            // Order Header
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                //clock icon
                 Row(
                   children: [
                     const SvgIcon(
                       icon: CustomIcons.clockSvg,
                       radius: 20,
+                      color: Colors.black54,
                     ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    //column for the text
+                    const SizedBox(width: 15),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Date',
                           style: TextStyle(
-                            color: Colors.blueGrey,
-                            fontSize: 16,
+                            color: Colors.black54,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         Text(
                           formatDateTime(order.orderDate),
                           style: const TextStyle(
+                            color: Colors.black87,
                             fontSize: 12,
                           ),
                         ),
@@ -68,129 +70,93 @@ class OrderTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                //text for the amount
-                Column(
-                  children: [
-                    const Text(
-                      'Status',
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      order.products.length == order.deliveredProducts.length
-                          ? 'Waiting for Admin to Deliver \n the Products'
-                          : '${order.products.length - order.deliveredProducts.length} product is on pending',
-                      overflow: TextOverflow.fade,
-                    ),
-                  ],
-                ),
                 Text(
-                  'Total Amount \n${changeAmountDecimal(amount: order.totalAmount)}',
-                  textAlign: TextAlign.center,
+                  changeAmountDecimal(amount: order.totalAmount),
                   style: const TextStyle(
-                    color: Colors.blue,
-                    overflow: TextOverflow.fade,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
                   ),
-                )
+                ),
               ],
             ),
-            //divider
-            const Divider(),
-            //text for the order details
-            Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
+            
+            const Divider(color: Colors.black12, thickness: 0.5),
+            
+            // Order Details
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: GlobalTitleText(
-                    title: 'Order Details',
-                    fontSize: 16,
-                  ),
-                ),
-                //row for the pic and details
-                Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //row for the name and quantity of the product ordered
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('No of Items : ${order.products.length}'),
-                              ],
-                            ),
-                            //text customer details
-                            GlobalTitleText(
-                              title: isUser
-                                  ? 'Delivery Details'
-                                  : 'Customer Details',
-                              fontSize: 14,
-                            ),
-                            Text(
-                              'Delivery Date : ${formatDateTime(order.deliveryDate)}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(isUser
-                                ? 'City : ${order.city}'
-                                : 'Name : ${order.name}'),
-                            Text('Location : ${order.address}'),
-                            Text('State : ${order.state}'),
-                            Text('Country : ${order.country}'),
-                            Text(
-                              isUser ? '' : 'Customer ID :${order.userID}',
-                              overflow: TextOverflow.fade,
-                            ),
-                          ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Items: ${order.products.length}',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                    //column for the two buttons
-                    if (!isUser)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          //accept button
-                          Text(
-                            'Your Share : ${calculateTotalPrizeForVendorOrdrer(productOrderModel: order.products)}',
-                            style: const TextStyle(
-                              color: Colors.blue,
-                            ),
-                          ),
-                          if (!isUser)
-                            SmallLongButton(
-                              onPressed: onPressedDeliverButton,
-                              text: 'Deliver',
-                              bgColor: Colors.green,
-                            ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          //decline button
-                          // const Text(
-                          //   'Date of Delivery',
-                          //   style: TextStyle(
-                          //     fontSize: 12,
-                          //   ),
-                          // ),
-                          if (!isUser) DeliveryDateChange(order: order),
-                          // SmallLongButton(
-                          //   onPressed: () {},
-                          //   text: 'Choose Date',
-                          //   bgColor: Colors.red,
-                          // )
-                        ],
-                      )
-                  ],
+                      const SizedBox(height: 10),
+                      Text(
+                        isUser ? 'Delivery Details' : 'Customer Details',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Delivery Date: ${formatDateTime(order.deliveryDate)}',
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        isUser 
+                          ? 'City: ${order.city}' 
+                          : 'Name: ${order.name}',
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        'Location: ${order.address}',
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                if (!isUser) ...[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Your Share: ${calculateTotalPrizeForVendorOrdrer(productOrderModel: order.products)}',
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SmallLongButton(
+                        onPressed: onPressedDeliverButton,
+                        text: 'Deliver',
+                        bgColor: Colors.black,
+                        textColor: Colors.white,
+                      ),
+                      const SizedBox(height: 10),
+                      DeliveryDateChange(order: order),
+                    ],
+                  )
+                ]
               ],
             ),
           ],

@@ -9,7 +9,7 @@ class CircularButton extends StatelessWidget {
     required this.circularButtonChild,
     required this.diameter,
     this.shadow = true,
-    this.color = AppPallete.primaryAppButtonColor,
+    this.color = const Color.fromARGB(255, 0, 0, 0),
   });
 
   final void Function()? onPressed;

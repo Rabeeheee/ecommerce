@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
@@ -89,8 +88,7 @@ class CartPageBottomContainer extends StatelessWidget {
                               pathParameters: {
                                 'totalAmount': total.toString()
                               });
-                          // Navigator.of(context).pop();
-                          // print('ok');
+                         
                         },
                       )),
                 )

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +19,6 @@ import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_welcome
 import 'package:tech_haven/user/features/auth/presentation/pages/welcome_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/checkout_page.dart';
-import 'package:tech_haven/user/features/checkout/presentation/pages/razor_payment.dart';
 import 'package:tech_haven/user/features/details/data/models/review_route_model.dart';
 import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
 import 'package:tech_haven/user/features/details/presentation/route%20params/to_about_product_page.dart';

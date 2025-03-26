@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -98,16 +97,14 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildSignUpMobileLayout(
-    BuildContext context,
-  ) {
+  Widget _buildSignUpMobileLayout(BuildContext context) {
     return Stack(
       alignment: AlignmentDirectional.center,
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-            // height: 15,
-            ),
+          // height: 15,
+        ),
         Positioned(
           top: 0,
           child: ConstrainedBox(
@@ -118,8 +115,9 @@ class _SignUpPageState extends State<SignUpPage> {
         Positioned(
           bottom: 0,
           child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
-              child: _buildSignUpAuthenticationContainer(context)),
+            constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
+            child: _buildSignUpAuthenticationContainer(context),
+          ),
         ),
       ],
     );
@@ -142,17 +140,13 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildSignUpAuthenticationContainer(
-    BuildContext context,
-  ) {
+  Widget _buildSignUpAuthenticationContainer(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
       children: [
         Column(
           children: [
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
             Expanded(
               child: AuthenticationContainer(
                 // height: 625,
@@ -222,13 +216,12 @@ class _SignUpPageState extends State<SignUpPage> {
                         InkWell(
                           onTap: () {
                             GoRouter.of(context).pushReplacementNamed(
-                                AppRouteConstants.signinPage);
+                              AppRouteConstants.signinPage,
+                            );
                           },
                           child: const Text(
                             'Sign in',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(fontSize: 14),
                           ),
                         ),
                       ],
@@ -237,53 +230,59 @@ class _SignUpPageState extends State<SignUpPage> {
                   PrimaryAppButton(
                     buttonText: 'Sign up',
                     onPressed: () async {
-  setState(() {
-    phoneNumberError =
-        Validator.validatePhoneNumber(phoneNumberController.text);
-    emailError = Validator.validateEmail(emailController.text);
-    passwordError = Validator.validatePassword(passwordController.text);
-    rePasswordError = passwordController.text == rePasswordController.text
-        ? null
-        : 'Passwords do not match';
-  });
+                      setState(() {
+                        phoneNumberError = Validator.validatePhoneNumber(
+                          phoneNumberController.text,
+                        );
+                        emailError = Validator.validateEmail(
+                          emailController.text,
+                        );
+                        passwordError = Validator.validatePassword(
+                          passwordController.text,
+                        );
+                        rePasswordError =
+                            passwordController.text == rePasswordController.text
+                                ? null
+                                : 'Passwords do not match';
+                      });
 
-  if (phoneNumberError == null &&
-      emailError == null &&
-      passwordError == null &&
-      rePasswordError == null &&
-      countryCode.value != '000') {
-    fullPhoneNumber = '+${countryCode.value}${phoneNumberController.text}';
+                      if (phoneNumberError == null &&
+                          emailError == null &&
+                          passwordError == null &&
+                          rePasswordError == null &&
+                          countryCode.value != '000') {
+                        fullPhoneNumber =
+                            '+${countryCode.value}${phoneNumberController.text}';
 
-    context.read<AuthBloc>().add(
-          SendOTPEvent(
-            phoneNumber: fullPhoneNumber,
-            email: emailController.text,
-            password: passwordController.text,
-          ),
-        );
+                        context.read<AuthBloc>().add(
+                          SendOTPEvent(
+                            phoneNumber: fullPhoneNumber,
+                            email: emailController.text,
+                            password: passwordController.text,
+                          ),
+                        );
 
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: fullPhoneNumber,
-      verificationCompleted: (phoneAuthCredential) {},
-      verificationFailed: (error) {},
-      codeSent: (verificationId, forceResendingToken) {
-        print(verificationId);
-        GoRouter.of(context).pushNamed(
-          AppRouteConstants.otpVerificationPage,
-          extra: OTPParams(
-            email: emailController.text,
-            password: passwordController.text,
-            phoneNumber: fullPhoneNumber,
-            verificaionID: verificationId,
-            isForSignUp: true,
-          ),
-        );
-      },
-      codeAutoRetrievalTimeout: (verificationId) {},
-    );
-  }
-}
-
+                        await FirebaseAuth.instance.verifyPhoneNumber(
+                          phoneNumber: fullPhoneNumber,
+                          verificationCompleted: (phoneAuthCredential) {},
+                          verificationFailed: (error) {},
+                          codeSent: (verificationId, forceResendingToken) {
+                            print(verificationId);
+                            GoRouter.of(context).pushNamed(
+                              AppRouteConstants.otpVerificationPage,
+                              extra: OTPParams(
+                                email: emailController.text,
+                                password: passwordController.text,
+                                phoneNumber: fullPhoneNumber,
+                                verificaionID: verificationId,
+                                isForSignUp: true,
+                              ),
+                            );
+                          },
+                          codeAutoRetrievalTimeout: (verificationId) {},
+                        );
+                      }
+                    },
                   ),
                   // const SizedBox(height: 50),
                 ],

@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                       } else if (state is TrendingProductLoaded) {
                         print(state.product.productName);
                         return ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 1000),
+                          constraints: const BoxConstraints(maxWidth: 900),
                           child: AdvertisementContainer(
                               trendingProduct: state.product),
                         );
@@ -65,6 +65,7 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
+                  
                   ConstrainedBox(
                       constraints: BoxConstraints.tight(const Size(2000, 300)),
                       child: const CarouselBannerContainer()),

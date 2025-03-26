@@ -7,7 +7,7 @@ class SvgIcon extends StatelessWidget {
     super.key,
     required this.icon,
     required this.radius,
-    this.color = AppPallete.blackColor,
+    this.color = const Color.fromARGB(255, 255, 255, 255),
     this.fit = BoxFit.none
   });
   final String icon;

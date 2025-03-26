@@ -17,38 +17,46 @@ class UserOrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    // Trigger order retrieval when the page loads
     context.read<UserOrderPageBloc>().add(GetAllOrdersForUserEvent());
-    // });
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      extendBody: true,
-      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        scrolledUnderElevation: 0,
-        leading: Responsive.isMobile(context) ? const CustomBackButton() : null,
-        backgroundColor: AppPallete.whiteColor,
-        forceMaterialTransparency: true,
+        backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Your Order'),
+        automaticallyImplyLeading: false,
+        leading: Responsive.isMobile(context) 
+          ? const CustomBackButton() 
+          : null,
+        title: Text(
+          'Your Orders', 
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+          ),
+        ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(
-              right: 5,
-            ),
+            padding: const EdgeInsets.only(right: 16),
             child: InkWell(
-                onTap: () {
-                  GoRouter.of(context)
-                      .pushNamed(AppRouteConstants.userOrderHistoryPage);
-                },
-                child: const SvgIcon(icon: CustomIcons.clockSvg, radius: 25)),
+              onTap: () {
+                GoRouter.of(context)
+                    .pushNamed(AppRouteConstants.userOrderHistoryPage);
+              },
+              child: SvgIcon(
+                icon: CustomIcons.clockSvg, 
+                radius: 25,
+                color: Colors.black87, 
+              ),
+            ),
           )
         ],
       ),
       body: BlocConsumer<UserOrderPageBloc, UserOrderPageState>(
         listener: (context, state) {
+          // Error handling and state management
           if (state is GetAllOrderListFailed) {
             Fluttertoast.showToast(msg: state.message);
           }
@@ -63,37 +71,81 @@ class UserOrderPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          return state is GetAllOrderListSuccess &&
-                  state.listOfOrderDetails.isNotEmpty
-              ? ListView.separated(
-                  itemCount: state.listOfOrderDetails.length,
-                  itemBuilder: (context, index) {
-                    return OrderTile(
-                      isUser: true,
-                      onTap: () {
-                        GoRouter.of(context).pushNamed(
-                            AppRouteConstants.userOrderDetailsPage,
-                            extra: state.listOfOrderDetails[index]);
-                      },
-                      order: state.listOfOrderDetails[index],
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(
-                      height: 10,
-                    );
-                  },
+          // Empty state with minimalist design
+          if (state is GetAllOrderListSuccess) {
+            return state.listOfOrderDetails.isEmpty 
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shopping_bag_outlined, 
+                        size: 100, 
+                        color: Colors.black.withOpacity(0.4),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No Orders Yet',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
                 )
-              : state is GetAllOrderListSuccess &&
-                      state.listOfOrderDetails.isEmpty
-                  ? const Center(
-                      child: Text('No Orders Left To Deliver'),
-                    )
-                  : Shimmer.fromColors(
-                      baseColor: Colors.grey.shade100,
-                      highlightColor: Colors.grey.shade300,
-                      child: Container(),
-                    );
+              : Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white,
+                        Colors.grey.shade50,
+                      ],
+                    ),
+                  ),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16, 
+                      vertical: 20
+                    ),
+                    itemCount: state.listOfOrderDetails.length,
+                    itemBuilder: (context, index) {
+                      return OrderTile(
+                        isUser: true,
+                        onTap: () {
+                          GoRouter.of(context).pushNamed(
+                            AppRouteConstants.userOrderDetailsPage,
+                            extra: state.listOfOrderDetails[index]
+                          );
+                        },
+                        order: state.listOfOrderDetails[index],
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider(
+                        color: Colors.black.withOpacity(0.1),
+                        thickness: 0.5,
+                      );
+                    },
+                  ),
+                );
+          }
+          
+          // Loading state with subtle shimmer
+          return Center(
+            child: Shimmer.fromColors(
+              baseColor: Colors.black12,
+              highlightColor: Colors.black26,
+              child: Container(
+                width: 200,
+                height: 50,
+                color: Colors.white,
+              ),
+            ),
+          );
         },
       ),
     );

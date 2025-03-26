@@ -1,9 +1,10 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tech_haven/core/common/bloc/common_bloc.dart';
 import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
 import 'package:tech_haven/core/routes/app_route_config.dart';
@@ -35,124 +36,71 @@ import 'package:tech_haven/vendor/features/orderdetails/presentation/bloc/vendor
 import 'package:tech_haven/vendor/features/profile/presentation/bloc/vendor_profile_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
-// import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tech_haven/vendor/features/registervendor/presentation/bloc/register_vendor_bloc.dart';
 import 'package:tech_haven/vendor/features/revenue/presentation/bloc/revenue_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // if(!kIsWeb){
-  // await dotenv.load(fileName: ".env");
-  // Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
-  // await Stripe.instance.applySettings();
-  // }
+  try {
+    if (!kIsWeb) {
+      await dotenv.load(fileName: ".env");
+      Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
+      await Stripe.instance.applySettings();
+    }
+  } catch (e, stack) {
+    log(e.toString(), stackTrace: stack);
+  }
 
-  
-   if (Firebase.apps.isEmpty) { 
+  if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(
-          // options: DefaultFirebaseOptions.currentPlatform,
-
+      // options: DefaultFirebaseOptions.currentPlatform,
     );
   }
   await initDependencies();
 
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (_) => serviceLocator<AppUserCubit>(),
-      ),
-      BlocProvider(
-        create: (context) => serviceLocator<AuthBloc>(),
-      ),
-       BlocProvider(
-        create: (context) => serviceLocator<ReviewPageBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<HomePageBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<HelpCenterBloc>(),
-      ),
-      BlocProvider(
-        create: (context) => serviceLocator<SearchCategoryBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<SearchCategoryCubit>(),
-      ),
-       BlocProvider(
-        create: (_) => serviceLocator<UserOrderHistoryPageBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<DetailsPageBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<RegisterProductBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<ManageProductBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<GetImagesBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<FavoritePageBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<CartPageBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<MapPageBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<CommonBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<CheckoutBloc>(),
-      ),
-       BlocProvider(
-        create: (_) => serviceLocator<ProfileBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<SearchCategoryCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<SearchCategoryAccordionCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<ProductsPageBloc>(),
-      ),
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
+        BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (context) => serviceLocator<ReviewPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<HomePageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<HelpCenterBloc>()),
+        BlocProvider(create: (context) => serviceLocator<SearchCategoryBloc>()),
+        BlocProvider(create: (_) => serviceLocator<SearchCategoryCubit>()),
+        BlocProvider(create: (_) => serviceLocator<UserOrderHistoryPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<DetailsPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<RegisterProductBloc>()),
+        BlocProvider(create: (_) => serviceLocator<ManageProductBloc>()),
+        BlocProvider(create: (_) => serviceLocator<GetImagesBloc>()),
+        BlocProvider(create: (_) => serviceLocator<FavoritePageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<CartPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<MapPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<CommonBloc>()),
+        BlocProvider(create: (_) => serviceLocator<CheckoutBloc>()),
+        BlocProvider(create: (_) => serviceLocator<ProfileBloc>()),
+        BlocProvider(create: (_) => serviceLocator<SearchCategoryCubit>()),
         BlocProvider(
-        create: (_) => serviceLocator<RegisterVendorBloc>(),
-      ),  BlocProvider(
-        create: (_) => serviceLocator<VendorOrderPageBloc>(),
-      ),
-       BlocProvider(
-        create: (_) => serviceLocator<VendorOrderDetailsBloc>(),
-      ),
-         BlocProvider(
-        create: (_) => serviceLocator<RevenueBloc>(),
-      ),
-        BlocProvider(
-        create: (_) => serviceLocator<UserOrderPageBloc>(),
-      ),
-        BlocProvider(
-        create: (_) => serviceLocator<SearchPageBloc>(),
-      ),
-        BlocProvider(
-        create: (_) => serviceLocator<ReviewEnterPageBloc>(),
-      ),
-       BlocProvider(
-        create: (_) => serviceLocator<ProfileEditPageBloc>(),
-      ),
-       BlocProvider(
-        create: (_) => serviceLocator<OrderedProductsPageBloc>(),
-      ),  BlocProvider(
-        create: (_) => serviceLocator<VendorProfileBloc>(),
-      ),
-    ],
-    child: const MyApp(),
-  ));
+          create: (_) => serviceLocator<SearchCategoryAccordionCubit>(),
+        ),
+        BlocProvider(create: (_) => serviceLocator<ProductsPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<RegisterVendorBloc>()),
+        BlocProvider(create: (_) => serviceLocator<VendorOrderPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<VendorOrderDetailsBloc>()),
+        BlocProvider(create: (_) => serviceLocator<RevenueBloc>()),
+        BlocProvider(create: (_) => serviceLocator<UserOrderPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<SearchPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<ReviewEnterPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<ProfileEditPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<OrderedProductsPageBloc>()),
+        BlocProvider(create: (_) => serviceLocator<VendorProfileBloc>()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
+
 ///hlshdfkjs
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -37,26 +37,18 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
       emit(CartPageLoadingState());
     });
     on<GetAllProductsEvent>(_onGetAllProductsEvent);
-    // on<GetAllCartEvent>(_onGetAllCartEvent);
     on<UpdateProductToFavoriteEvent>(
       _onUpdateProductToFavoriteEvent,
     );
     on<UpdateProductToCartEvent>(
       _onUpdateProductToCartEvent,
-      // transformer: debounceSequential(
-      //   const Duration(
-      //     milliseconds: 300,
-      //   ),
-      // ),
+     
     );
-    // on<UpdateProductToCart>(_onUpdateProductToCart);
   }
 
   FutureOr<void> _onGetAllProductsEvent(
       GetAllProductsEvent event, Emitter<CartPageState> emit) async {
-    // final allCarted = await _getAllCart(NoParams());
-    // final allFavorited = await _getAllFavorite(NoParams());
-    // final allProductsResult = await _getAllProduct(NoParams());
+    
     emit(CartPageLoadingState());
     final allCartedProduct = await _getAllCartProduct(NoParams());
     final allCart = await _getAllCart(NoParams());
@@ -90,16 +82,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     });
   }
 
-  // FutureOr<void> _onGetAllBannerEvent(
-  //     GetAllBannerEvent event, Emitter<CartPageState> emit) async {
-  //   final result = await _getAllBanner(NoParams());
-
-  //   result.fold((failure) {
-  //     emit(GetAllBannerFailed(message: failure.message));
-  //   }, (success) {
-  //     emit(GetAllBannerSuccess(listOfBanners: success));
-  //   });
-  // }
+  
 
   FutureOr<void> _onUpdateProductToFavoriteEvent(
       UpdateProductToFavoriteEvent event, Emitter<CartPageState> emit) async {
@@ -128,23 +111,6 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
         (success) => emit(CartUpdatedSuccess(
               updatedSuccess: success,
             )));
-    // await Future.delayed(const Duration(seconds: 3));
-    // emit(ProductUpdatedToCartSuccess(updatedSuccess: true));
+   
   }
-
-  // FutureOr<void> _onGetAllCartEvent(
-  //     GetAllCartEvent event, Emitter<CartPageState> emit) async {
-  //   // emit(CartUpdatedToCartLoading());
-  //   final result = await _getAllCart(NoParams());
-
-  //   result.fold(
-  //       (failure) => emit(CartLoadedFailedState(
-  //             message: failure.message,
-  //           )), (success) {
-  //     print(success);
-  //     return emit(CartLoadedSuccessState(
-  //       listOfCart: success,
-  //     ));
-  //   });
-  // }
 }

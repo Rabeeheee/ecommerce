@@ -11,7 +11,6 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/otp_page_state.dart';
-import 'package:tech_haven/user/features/auth/presentation/responsive/responsive_authentication.dart';
 import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
 import 'package:lottie/lottie.dart';

@@ -10,24 +10,24 @@ import 'package:tech_haven/user/features/cart/presentation/widgets/save_button.d
 import '../../constants/constants.dart';
 
 class RectangularProductCard extends StatelessWidget {
-  const RectangularProductCard(
-      {super.key,
-      // required this.items,
+  const RectangularProductCard({
+    super.key,
+    this.isLoading = false,
+    required this.onTap,
+    required this.isFavoriteCard,
+    required this.productName,
+    required this.textEditingController,
+    required this.productPrize,
+    required this.vendorName,
+    required this.deliveryDate,
+    this.onTapFavouriteButton,
+    required this.productImage,
+    this.isFavorite = false,
+    this.onPressedSaveButton,
+    this.productQuantity = '0',
+    this.onTapRemoveButton,
+  });
 
-      this.isLoading = false,
-      required this.onTap,
-      required this.isFavoriteCard,
-      required this.productName,
-      required this.textEditingController,
-      required this.productPrize,
-      required this.vendorName,
-      required this.deliveryDate,
-      this.onTapFavouriteButton,
-      required this.productImage,
-      this.isFavorite = false,
-      this.onPressedSaveButton,
-      this.productQuantity = '0',
-      this.onTapRemoveButton});
   final bool isFavoriteCard;
   final bool isFavorite;
   final bool isLoading;
@@ -120,15 +120,12 @@ class RectangularProductCardContent extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(
-          10,
-        ),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //for the heading
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -138,23 +135,16 @@ class RectangularProductCardContent extends StatelessWidget {
                       Text(
                         productName,
                         softWrap: true,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       Constants.kHeight,
-                      //for the price
                       Row(
                         children: [
                           const Text(
                             'AED',
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(fontSize: 12),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                          const SizedBox(width: 10),
                           Text(
                             productPrize,
                             style: const TextStyle(
@@ -165,7 +155,6 @@ class RectangularProductCardContent extends StatelessWidget {
                         ],
                       ),
                       Constants.kHeight,
-                      //for the delivery
                       if (!isFavoriteCard)
                         Row(
                           children: [
@@ -176,9 +165,7 @@ class RectangularProductCardContent extends StatelessWidget {
                                 fontSize: 12,
                               ),
                             ),
-                            const SizedBox(
-                              width: 2,
-                            ),
+                            const SizedBox(width: 2),
                             Text(
                               deliveryDate,
                               style: const TextStyle(
@@ -190,17 +177,13 @@ class RectangularProductCardContent extends StatelessWidget {
                           ],
                         ),
                       Constants.kHeight,
-                      //for the vendor name
                       Row(
                         children: [
                           const Text('Sold by'),
-                          const SizedBox(
-                            width: 5,
-                          ),
+                          const SizedBox(width: 5),
                           Text(
                             vendorName,
                             style: const TextStyle(
-                              // color: AppPallete.primaryAppButtonColor,
                               fontWeight: FontWeight.w700,
                               fontSize: 12,
                             ),
@@ -216,17 +199,20 @@ class RectangularProductCardContent extends StatelessWidget {
                     width: 100,
                     height: 100,
                     child: productImage != null
-                        ? CachedNetworkImage(
-                            imageUrl: productImage!,
-                            placeholder: (context, url) => Image.asset(
-                              'assets/logo/techHavenLogo.png',
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: productImage!,
+                              placeholder: (context, url) => Image.asset(
+                                'assets/logo/techHavenLogo.png',
+                                fit: BoxFit.contain,
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/logo/techHavenLogo.png',
+                                fit: BoxFit.contain,
+                              ),
                               fit: BoxFit.contain,
                             ),
-                            errorWidget: (context, url, error) => Image.asset(
-                              'assets/logo/techHavenLogo.png',
-                              fit: BoxFit.contain,
-                            ),
-                            fit: BoxFit.contain,
                           )
                         : Image.asset(
                             'assets/logo/techHavenLogo.png',
@@ -258,54 +244,40 @@ class RectangularProductCardContent extends StatelessWidget {
                               textAlign: TextAlign.center,
                               decoration: const InputDecoration(
                                 hintText: 'Quantity',
-                                hintStyle: TextStyle(
-                                  fontSize: 12,
-                                ),
+                                hintStyle: TextStyle(fontSize: 12),
                                 alignLabelWithHint: true,
                                 contentPadding: EdgeInsets.only(bottom: 2),
                                 fillColor: AppPallete.darkgreyColor,
                                 border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      5,
-                                    ),
-                                  ),
+                                  borderSide: BorderSide(style: BorderStyle.solid),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
                               ),
+                              onChanged: (value) {
+                                if (value.isNotEmpty && int.parse(value) < 0) {
+                                  textEditingController?.text = '0';
+                                }
+                              },
                             ),
                           ),
-                          const SizedBox(
-                            width: 5,
-                          ),
+                          const SizedBox(width: 5),
                           SizedBox(
                             width: 100,
                             height: 30,
-                            child: SaveButton(
-                              onPressed: onPressedSaveButton,
-                            ),
+                            child: SaveButton(onPressed: onPressedSaveButton),
                           ),
                         ],
                       ),
                       Text(
-                        'Total Quantity Available : $productQuantity',
-                        style: const TextStyle(
-                          fontSize: 10,
-                        ),
+                        'Total Quantity Available : ${int.parse(productQuantity) < 0 ? '0' : productQuantity}',
+                        style: const TextStyle(fontSize: 10),
                       )
                     ],
                   ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    //remove button
                     if (!isFavoriteCard) RemoveButton(onTap: onTapRemoveButton),
-                    //heart button
-                    CustomLikeButton(
-                      isFavorited: isFavorited,
-                      onTapFavouriteButton: onTapFavouriteButton,
-                    )
+                    CustomLikeButton(isFavorited: isFavorited, onTapFavouriteButton: onTapFavouriteButton),
                   ],
                 )
               ],

@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 
 class BottomCartQuantityAndButton extends StatelessWidget {
@@ -21,12 +23,10 @@ class BottomCartQuantityAndButton extends StatelessWidget {
     return BlocConsumer<DetailsPageBloc, DetailsPageState>(
       listener: (context, state) {
         if (state is UpdateProductToCartDetailsSuccess) {
-          // print('hello how are you hope you are doing good');
           Fluttertoast.showToast(
-              msg: 'The Product Is Updated To Cart SuccessFully');
-          context
-              .read<DetailsPageBloc>()
-              .add(GetProductCartDetailsEvent(productID: product.productID));
+              msg: 'The Product Is Updated To Cart Successfully');
+          context.read<DetailsPageBloc>().add(
+              GetProductCartDetailsEvent(productID: product.productID));
         }
         if (state is UpdateProductToCartDetailsFailed) {
           Fluttertoast.showToast(msg: state.message);
@@ -34,15 +34,11 @@ class BottomCartQuantityAndButton extends StatelessWidget {
       },
       buildWhen: (previous, current) => current is CartDetailsState,
       builder: (context, state) {
-        // print(state);
         if (state is CartLoadedSuccessDetailsState) {
-          bool productIsCarted = false;
-          if (state.cart.cartID != 'null') {
-            productIsCarted = true;
-          }
+          bool productIsCarted = state.cart.cartID != 'null';
+          int productCount = state.cart.productCount < 0 ? 0 : state.cart.productCount;
 
           return Container(
-            // width: double.maxFinite,
             height: 70,
             decoration: const BoxDecoration(
               color: AppPallete.whiteColor,
@@ -61,107 +57,76 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                   width: 50,
                   decoration: const BoxDecoration(
                     color: AppPallete.whiteColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        5,
-                      ),
-                    ),
-                    border: Border(
-                      top: BorderSide(
-                        color: AppPallete.greyTextColor,
-                        width: 0.5,
-                      ),
-                      bottom: BorderSide(
-                        color: AppPallete.greyTextColor,
-                        width: 0.5,
-                      ),
-                      right: BorderSide(
-                        color: AppPallete.greyTextColor,
-                        width: 0.5,
-                      ),
-                      left: BorderSide(
-                        color: AppPallete.greyTextColor,
-                        width: 0.5,
-                      ),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    border: Border.fromBorderSide(
+                      BorderSide(color: AppPallete.greyTextColor, width: 0.5),
                     ),
                   ),
                   child: InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          TextEditingController controller =
-                              TextEditingController();
-
-                          controller.text = state.cart.productCount.toString();
-                          return AlertDialog(
-                            title: const Text('Update Quantity'),
-                            content: CustomTextFormField(
-                              textEditingController: controller,
-                              labelText:
-                                  'Total Quantity Available : ${product.quantity.toString()}',
-                              hintText: 'Enter a value',
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                            ),
-                            actions: <Widget>[
-                              RoundedRectangularButton(
-                                title: 'Cancel',
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              ),
-                              RoundedRectangularButton(
-                                onPressed: () {
-                                  if (product.quantity >=
-                                      int.parse(controller.text)) {
-                                    // print('hello');
-                                    productIsCarted
-                                        ? context.read<DetailsPageBloc>().add(
-                                            UpdateProductToCartDetailsEvent(
-                                                cart: state.cart,
-                                                itemCount:
-                                                    int.parse(controller.text),
-                                                product: product))
-                                        : context.read<DetailsPageBloc>().add(
-                                            UpdateProductToCartDetailsEvent(
-                                                cart: null,
-                                                itemCount:
-                                                    int.parse(controller.text),
-                                                product: product));
-                                    // print('hello');
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            'Insufficient Quantity availble for this product');
-                                  }
-                                  // Perform update logic here
-
-                                  // String newValue = controller.text;
-                                  // print('New value: $newValue');
-                                  // Close the dialog
-                                },
-                                title: 'Update',
-                              ),
-                            ],
+                    onTap: product.quantity <= 0 
+                      ? () {
+                          showSnackBar(
+                            context: context,
+                            title: 'Out of Stock',
+                            content: 'This product is currently unavailable.',
+                            contentType: ContentType.failure,
                           );
-                        },
-                      );
-                    },
+                        }
+                      : () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            TextEditingController controller =
+                                TextEditingController(text: productCount.toString());
+                            return AlertDialog(
+                              title: const Text('Update Quantity'),
+                              content: CustomTextFormField(
+                                textEditingController: controller,
+                                labelText:
+                                    'Total Quantity Available: ${product.quantity.toString()}',
+                                hintText: 'Enter a value',
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              ),
+                              actions: <Widget>[
+                                RoundedRectangularButton(
+                                  title: 'Cancel',
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                                RoundedRectangularButton(
+                                  onPressed: () {
+                                    int newQuantity = int.tryParse(controller.text) ?? 0;
+                                    if (newQuantity > product.quantity) {
+                                      showSnackBar(
+                                        context: context,
+                                        title: 'Quantity Error',
+                                        content: 'There is not enough stock available.',
+                                        contentType: ContentType.failure,
+                                      );
+                                    } else {
+                                      context.read<DetailsPageBloc>().add(
+                                          UpdateProductToCartDetailsEvent(
+                                              cart: productIsCarted ? state.cart : null,
+                                              itemCount: newQuantity >= 0 ? newQuantity : 0,
+                                              product: product));
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  title: 'Update',
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const Text(
-                          'QTY',
-                          style: TextStyle(
-                              color: AppPallete.greyTextColor, fontSize: 10),
-                        ),
+                        const Text('QTY',
+                            style: TextStyle(
+                                color: AppPallete.greyTextColor, fontSize: 10)),
                         Text(
-                          state.cart.productCount.toString(),
+                          productCount.toString(),
                           style: const TextStyle(
                             color: AppPallete.textColor,
                             fontSize: 20,
@@ -172,30 +137,31 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 15,
-                ),
+                const SizedBox(width: 15),
                 Expanded(
                   child: SizedBox(
                     height: 50,
                     child: RoundedRectangularButton(
-                      title: !productIsCarted && state.cart.productCount == 1
-                          ? 'ADD TO CART'
-                          : productIsCarted && state.cart.productCount >= 1
-                              ? 'REMOVE FROM CART'
-                              : '',
-                      onPressed: () {
-                        productIsCarted
-                            ? context.read<DetailsPageBloc>().add(
-                                UpdateProductToCartDetailsEvent(
-                                    cart: state.cart,
-                                    itemCount: 0,
-                                    product: product))
-                            : context.read<DetailsPageBloc>().add(
-                                UpdateProductToCartDetailsEvent(
-                                    cart: null,
-                                    itemCount: 1,
-                                    product: product));
+                      title: productIsCarted && productCount >= 1
+                          ? 'REMOVE FROM CART'
+                          : 'ADD TO CART',
+                      onPressed: product.quantity <= 0 
+                        ? () {
+                            showSnackBar(
+                              context: context,
+                              title: 'Out of Stock',
+                              content: 'This product is currently unavailable.',
+                              contentType: ContentType.failure,
+                            );
+                          }
+                        : () {
+                        context.read<DetailsPageBloc>().add(
+                          UpdateProductToCartDetailsEvent(
+                            cart: productIsCarted ? state.cart : null,
+                            itemCount: productIsCarted ? 0 : 1,
+                            product: product,
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -205,7 +171,6 @@ class BottomCartQuantityAndButton extends StatelessWidget {
           );
         }
         return Container(
-          // width: double.maxFinite,
           height: 70,
           decoration: const BoxDecoration(
             color: AppPallete.whiteColor,
@@ -224,57 +189,40 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                 width: 50,
                 decoration: const BoxDecoration(
                   color: AppPallete.whiteColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(
-                      5,
-                    ),
-                  ),
-                  border: Border(
-                    top: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
-                    bottom: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
-                    right: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
-                    left: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  border: Border.fromBorderSide(
+                    BorderSide(color: AppPallete.greyTextColor, width: 0.5),
                   ),
                 ),
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      'QTY',
-                      style: TextStyle(
-                          color: AppPallete.greyTextColor, fontSize: 10),
-                    ),
-                    Text(
-                      '0',
-                      style: TextStyle(
-                        color: AppPallete.textColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
+                    Text('QTY',
+                        style: TextStyle(
+                            color: AppPallete.greyTextColor, fontSize: 10)),
+                    Text('0',
+                        style: TextStyle(
+                          color: AppPallete.textColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        )),
                   ],
                 ),
               ),
-              const SizedBox(
-                width: 15,
-              ),
-              const Expanded(
+              const SizedBox(width: 15),
+              Expanded(
                 child: SizedBox(
-                  height: 50,
+                  height: 50, 
                   child: RoundedRectangularButton(
-                    title: 'ADD TO CART',
+                    title: 'ADD TO CART', 
+                    onPressed: () {
+                      showSnackBar(
+                        context: context,
+                        title: 'Out of Stock',
+                        content: 'This product is currently unavailable.',
+                        contentType: ContentType.failure,
+                      );
+                    }
                   ),
                 ),
               ),
@@ -284,4 +232,4 @@ class BottomCartQuantityAndButton extends StatelessWidget {
       },
     );
   }
-}
+} 

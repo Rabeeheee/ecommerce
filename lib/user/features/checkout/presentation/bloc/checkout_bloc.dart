@@ -139,7 +139,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         oneProduct
             .fold((l) => emit(AllCartClearedFailedState(message: l.message)),
                 (product) async {
-          newQuantity = product.quantity - cart.productCount;
+          newQuantity = (product.quantity - cart.productCount).clamp(0, double.infinity);
           // print(newQuantity);
           final updated = await _updateProductFields(UpdateProductFieldsParams(
               updates: {'quantity': newQuantity},

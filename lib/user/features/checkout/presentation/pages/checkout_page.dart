@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:tech_haven/core/common/widgets/custom_toast.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/checkout/data/models/payment_intent_model.dart';
 import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
@@ -62,7 +63,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
             }
           }
           if (state is PaymentFailed) {
-            Fluttertoast.showToast(msg: state.message);
+            CustomToast().showCustomToast(state.message,Colors.black);
+            // Fluttertoast.showToast(msg: state.message);
             GoRouter.of(context).pop();
           }
           if (state is PaymentSuccess) {
@@ -213,28 +215,5 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  // showPaymentSheetForWeb({required PaymentIntentModel paymentIntentModel}) {
-  //   final String clientSecret = paymentIntentModel.clientSecret;
-  //   final PlatformWebViewController controller = PlatformWebViewController(
-  //     const PlatformWebViewControllerCreationParams(),
-  //   )..loadRequest(
-  //       LoadRequestParams(
-  //         uri: Uri.parse(
-  //             'https://techhavenstripepayment.web.app/?client_secret=$clientSecret'),
-  //       ),
-  //     );
 
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => Dialog(
-  //       child: SizedBox(
-  //         width: 400,
-  //         height: 600,
-  //         child: PlatformWebViewWidget(
-  //           PlatformWebViewWidgetCreationParams(controller: controller),
-  //         ).build(context),
-  //       ),
-  //     ),
-  //   );
-  // }
 }

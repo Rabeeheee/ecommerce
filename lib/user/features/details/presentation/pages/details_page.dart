@@ -212,9 +212,9 @@ class DetailsPage extends StatelessWidget {
                     // ),
                     const SizedBox(height: 8.0),
                     Text(
-                      product.quantity == 0 ? 'Not In Stock' : 'In Stock',
+                      product.quantity <= 0 ? 'Not In Stock' : 'In Stock',
                       style: TextStyle(
-                        color: product.quantity == 0 ? Colors.red : Colors.green,
+                        color: product.quantity <= 0 ? Colors.red : Colors.green,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

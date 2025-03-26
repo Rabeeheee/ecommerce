@@ -14,16 +14,11 @@ import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 
 class CarouselBannerContainer extends StatelessWidget {
-  const CarouselBannerContainer({
-    super.key,
-  });
+  const CarouselBannerContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // height: 300,
-      // margin: const EdgeInsets.all(8),
-      // padding: const EdgeInsets.all(8.0),
       child: BlocConsumer<HomePageBloc, HomePageState>(
         buildWhen: (previous, current) => current is BannerCarouselState,
         listener: (context, state) {
@@ -47,135 +42,152 @@ class CarouselBannerContainer extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is GetAllBannerHomeSuccess) {
-            // print('success');
-            return CarouselSlider(
-              options: CarouselOptions(
-                aspectRatio: 16 / 9, // Set aspect ratio to 16:9
-                viewportFraction: Responsive.isMobile(context)
-                    ? 0.8
-                    : Responsive.isTablet(context)
-                        ? 0.6
-                        : Responsive.isDesktop(context)
-                            ? 0.4
-                            : 0.8, // Set width of carousel items
-                enlargeCenterPage: true,
-                enlargeFactor: Responsive.isMobile(context)
-                    ? 0.3
-                    : Responsive.isTablet(context)
-                        ? 0.5
-                        : Responsive.isDesktop(context)
-                            ? 0.7
-                            : 0.3,
-                enlargeStrategy: CenterPageEnlargeStrategy.scale,
-                enableInfiniteScroll: true,
-                autoPlay: true,
-              ),
-              items:
-                  //here there must be builder of items from the firebase
-                  [
-                ...List.generate(state.listOfBanners.length, (index) {
-                  return CachedNetworkImage(
-                    imageUrl: state.listOfBanners[index].imageURL,
-                    imageBuilder: (context, imageProvider) => GestureDetector(
-                      onTap: () {
-                        context.read<HomePageBloc>().add(
-                              BannerProductNavigateEvent(
-                                productID: state.listOfBanners[index].productID,
-                              ),
-                            );
-                      },
-                      child: Container(
-                        clipBehavior: Clip.antiAlias,
-                        margin: const EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                          color: AppPallete.whiteColor,
-                          boxShadow: [Constants.globalBoxBlur],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+            return CarouselSlider.builder(
+              options: _carouselOptions(context),
+              itemCount: state.listOfBanners.length,
+              itemBuilder: (context, index, realIndex) {
+                final banner = state.listOfBanners[index];
+                return GestureDetector(
+                  onTap: () {
+                    context.read<HomePageBloc>().add(
+                          BannerProductNavigateEvent(
+                            productID: banner.productID,
                           ),
-                        ),
-                        child: Image(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    placeholder: (context, url) => Shimmer.fromColors(
-                      baseColor: Colors.grey.shade100,
-                      highlightColor: Colors.grey.shade300,
-                      child: Container(
-                        margin: const EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                          color: AppPallete.whiteColor,
-                          boxShadow: [Constants.globalBoxBlur],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                        ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      margin: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        color: AppPallete.whiteColor,
-                        boxShadow: [Constants.globalBoxBlur],
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: const Icon(Icons.error),
-                    ),
-                  );
-                }),
-              ],
+                        );
+                  },
+                  child: _buildBannerCard(banner.imageURL),
+                );
+              },
             );
           }
-          return CarouselSlider(
-            options: CarouselOptions(
-                aspectRatio: 16 / 9, // Set aspect ratio to 16:9
-                viewportFraction: Responsive.isMobile(context)
-                    ? 0.8
-                    : Responsive.isTablet(context)
-                        ? 0.6
-                        : Responsive.isDesktop(context)
-                            ? 0.4
-                            : 0.8, // Set width of carousel items
-                enlargeCenterPage: true,
-                enlargeFactor: Responsive.isMobile(context)
-                    ? 0.3
-                    : Responsive.isTablet(context)
-                        ? 0.5
-                        : Responsive.isDesktop(context)
-                            ? 0.7
-                            : 0.3,
-                enlargeStrategy: CenterPageEnlargeStrategy.scale,
-                enableInfiniteScroll: true,
-                autoPlay: true,
-              ),
-            items:
-                //here there must be builder of items from the firebase
-                [
-              ...List.generate(10, (index) {
-                return Shimmer.fromColors(
-                  baseColor: Colors.grey.shade100,
-                  highlightColor: Colors.grey.shade300,
-                  child: Container(
-                    margin: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
-                      color: AppPallete.whiteColor,
-                      boxShadow: [Constants.globalBoxBlur],
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          10,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ],
+          // Placeholder shimmer while loading
+          return CarouselSlider.builder(
+            options: _carouselOptions(context),
+            itemCount: 5,
+            itemBuilder: (context, index, realIndex) {
+              return _buildShimmerCard();
+            },
           );
         },
+      ),
+    );
+  }
+
+  CarouselOptions _carouselOptions(BuildContext context) {
+    return CarouselOptions(
+      aspectRatio: 16 / 9,
+      viewportFraction: Responsive.isMobile(context)
+          ? 0.8
+          : Responsive.isTablet(context)
+              ? 0.6
+              : Responsive.isDesktop(context)
+                  ? 0.4
+                  : 0.8,
+      enlargeCenterPage: true,
+      enlargeFactor: Responsive.isMobile(context)
+          ? 0.3
+          : Responsive.isTablet(context)
+              ? 0.5
+              : Responsive.isDesktop(context)
+                  ? 0.7
+                  : 0.3,
+      enlargeStrategy: CenterPageEnlargeStrategy.scale,
+      enableInfiniteScroll: true,
+      autoPlay: true,
+      autoPlayInterval: const Duration(seconds: 4),
+      autoPlayAnimationDuration: const Duration(milliseconds: 800),
+      autoPlayCurve: Curves.easeInOut,
+    );
+  }
+
+  Widget _buildBannerCard(String imageUrl) {
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      imageBuilder: (context, imageProvider) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10,
+              offset: Offset(0, 6),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image(
+                image: imageProvider,
+                fit: BoxFit.cover,
+              ),
+              // Gradient overlay
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.4),
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.3),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+              // Optional: Add a subtle text or icon overlay if needed
+              Positioned(
+                bottom: 10,
+                right: 10,
+                child: Icon(Icons.shopping_cart, color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+      ),
+      placeholder: (context, url) => _buildShimmerCard(),
+      errorWidget: (context, url, error) => _buildErrorCard(),
+    );
+  }
+
+  Widget _buildShimmerCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey.shade100,
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.grey.shade300,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey.shade200,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: const Center(
+        child: Icon(Icons.error, color: Colors.redAccent, size: 40),
       ),
     );
   }

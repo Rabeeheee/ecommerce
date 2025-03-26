@@ -229,7 +229,7 @@ class ProductCard extends StatelessWidget {
                               height: 8,
                               width: 40,
                               decoration: BoxDecoration(
-                                color: product!.quantity == 0
+                                color: product!.quantity <= 0
                                     ? Colors.red
                                     : Colors.green,
                                 boxShadow: const [

@@ -12,9 +12,7 @@ import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.d
 import 'package:tech_haven/user/features/home/presentation/widgets/deals_product_card.dart';
 
 class DealsGridView extends StatelessWidget {
-  const DealsGridView({
-    super.key,
-  });
+  const DealsGridView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,108 +39,94 @@ class DealsGridView extends StatelessWidget {
     }
 
     return Container(
-      height: 670,
-      margin: const EdgeInsets.only(
-        top: 20,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.15),
+            spreadRadius: 4,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        'MEGA DEALS',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+              Row(
+                children: [
+                  Text(
+                    'MEGA DEALS',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
                     ),
-                    SizedBox(
-                      width: 5,
+                  ),
+                  SizedBox(width: 6),
+                  Text(
+                    '24 HOURS ONLY',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Flexible(
-                      child: Text(
-                        '24 HOURS ONLY',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              // SizedBox(
-              //   height: 25,
-              //   width: 125,
-              //   child: ElevatedButton(
-              //     onPressed: () {},
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: AppPallete.blackColor,
-              //       foregroundColor: AppPallete.whiteColor,
-              //       shape: const RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.all(
-              //           Radius.circular(5),
-              //         ),
-              //       ),
-              //     ),
-              //     child: const Text(
-              //       'VIEW ALL',
-              //       style: TextStyle(
-              //         color: AppPallete.whiteColor,
-              //         fontSize: 12,
-              //         fontWeight: FontWeight.w700,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
-          // Container for the product card
-          Container(
-            height: 600,
-            margin: const EdgeInsets.only(top: 20),
-            child: BlocConsumer<HomePageBloc, HomePageState>(
-              buildWhen: (previous, current) =>
-                  current is HorizontalProductListViewState,
-              listener: (context, state) {},
-              builder: (context, listState) {
-                if (listState is HorizontalProductsListViewHomeSuccess) {
-                  return GridView.builder(
-                    itemCount: listState.listOfProducts.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      childAspectRatio: 1 / 1,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      maxCrossAxisExtent: 300,
-                    ),
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final currentProduct = listState.listOfProducts[index];
-                      return DealsProductCard(
+          const SizedBox(height: 16),
+          // Grid of product cards
+          BlocConsumer<HomePageBloc, HomePageState>(
+            buildWhen: (previous, current) =>
+                current is HorizontalProductListViewState,
+            listener: (context, state) {},
+            builder: (context, listState) {
+              if (listState is HorizontalProductsListViewHomeSuccess) {
+                return GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: listState.listOfProducts.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3 / 4,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                  ),
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final currentProduct = listState.listOfProducts[index];
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 2,
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: DealsProductCard(
                         likeButton: BlocBuilder<HomePageBloc, HomePageState>(
                           buildWhen: (previous, current) =>
                               current is ProductFavoriteHomeState,
                           builder: (context, favstate) {
-                            // print(favstate is FavoriteLoadedSuccessHomeState);
                             if (favstate is FavoriteLoadedSuccessHomeState) {
                               return CustomLikeButton(
                                 isFavorited: favstate.listOfFavorite
                                     .contains(currentProduct.productID),
                                 onTapFavouriteButton: (bool isLiked) async {
                                   updateProductToFavorite(
-                                      listState.listOfProducts[index], isLiked);
+                                      currentProduct, isLiked);
                                   return isLiked ? false : true;
                                 },
                               );
@@ -150,8 +134,6 @@ class DealsGridView extends StatelessWidget {
                             return CustomLikeButton(
                               isFavorited: false,
                               onTapFavouriteButton: (bool isLiked) async {
-                                // updateProductToFavorite(
-                                //     listState.listOfProducts[index], isLiked);
                                 return isLiked ? false : true;
                               },
                             );
@@ -172,7 +154,7 @@ class DealsGridView extends StatelessWidget {
                             if (cartState is CartLoadedSuccessHomeState) {
                               bool productIsCarted = false;
                               final cartIndex = checkCurrentProductIsCarted(
-                                  product: listState.listOfProducts[index],
+                                  product: currentProduct,
                                   carts: cartState.listOfCart);
 
                               if (cartIndex > -1) {
@@ -237,41 +219,32 @@ class DealsGridView extends StatelessWidget {
                             );
                           },
                         ),
-                      );
-                    },
-                  );
-                }
-                return GridView.builder(
-                  itemCount: 6,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    childAspectRatio: 1 / 1,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    maxCrossAxisExtent: 300,
-                  ),
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return DealsProductCard(
-                      likeButton: CustomLikeButton(
-                        isFavorited: false,
-                        onTapFavouriteButton: (bool isLiked) async {
-                          return isLiked ? false : true;
-                        },
-                      ),
-                      isHorizontal: true,
-                      product: null,
-                      shoppingCartWidget: ShoppingCartButton(
-                        onTapPlusButton: () {},
-                        onTapMinusButton: () {},
-                        onTapCartButton: () {},
-                        currentCount: 10,
-                        isLoading: false,
                       ),
                     );
                   },
                 );
-              },
-            ),
+              }
+              // Placeholder loading cards
+              return GridView.builder(
+                shrinkWrap: true,
+                itemCount: 4,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 3 / 4,
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 15,
+                ),
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ],
       ),

@@ -6,7 +6,8 @@ class SmallLongButton extends StatelessWidget {
     super.key,
     required this.bgColor,
     required this.text,
-    required this.onPressed,
+    required this.onPressed, required Color textColor,
+    
   });
 
   final Color bgColor;

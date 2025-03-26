@@ -52,9 +52,9 @@ class DealsProductCard extends StatelessWidget {
                               color: AppPallete.whiteColor,
                               image: DecorationImage(
                                 image: imageProvider,
-                                fit: BoxFit.contain,
+                                fit: BoxFit.cover,
                               ),
-                              borderRadius: const BorderRadius.only(
+                              borderRadius:  BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10),
                               ),
@@ -70,6 +70,7 @@ class DealsProductCard extends StatelessWidget {
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(10),
                                   topRight: Radius.circular(10),
+                                  
                                 ),
                               ),
                             ),

@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/entities/trending_product.dart';
-import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
@@ -16,21 +15,15 @@ class AdvertisementContainer extends StatelessWidget {
 
   const AdvertisementContainer({super.key, required this.trendingProduct});
 
-  // final Color _dominantColor = Colors.blue;
-
-  // @override
   @override
   Widget build(BuildContext context) {
     return trendingProduct != null
-        ? AdvertisementCard(
-            trendingProduct: trendingProduct!,
-          )
+        ? AdvertisementCard(trendingProduct: trendingProduct!)
         : Shimmer.fromColors(
             baseColor: Colors.grey.shade100,
             highlightColor: Colors.grey.shade300,
-            child: AdvertisementCard(
-              trendingProduct: trendingProduct,
-            ));
+            child: AdvertisementCard(trendingProduct: trendingProduct),
+          );
   }
 }
 
@@ -46,14 +39,20 @@ class AdvertisementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return trendingProduct != null
         ? Container(
-            height: 150,
+            height: 170,
             decoration: BoxDecoration(
-                color: AppPallete.primaryAppColor,
-                borderRadius: Responsive.isMobile(context)
-                    ? const BorderRadius.all(Radius.zero)
-                    : BorderRadius.circular(10)),
-            // width: 50,
-            padding: const EdgeInsets.all(10),
+              color: const Color.fromARGB(255, 0, 0, 0),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.4),
+                  spreadRadius: 2,
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 Expanded(
@@ -68,20 +67,19 @@ class AdvertisementCard extends StatelessWidget {
                           Text(
                             trendingProduct!.trendingText,
                             style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              overflow: TextOverflow.fade,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                            softWrap: true,
                           ),
+                          const SizedBox(height: 4),
                           Text(
                             trendingProduct!.productName,
                             style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 13,
                               fontWeight: FontWeight.w400,
+                              color: Colors.white70,
                             ),
-                            // overflow: TextOverflow.ellipsis,
-                            softWrap: true,
                           ),
                         ],
                       ),
@@ -93,32 +91,30 @@ class AdvertisementCard extends StatelessWidget {
                             GoRouter.of(context).pushNamed(
                                 AppRouteConstants.detailsPage,
                                 extra: state.product);
-                            // context
-                            //     .read<HomePageBloc>()
-                            //     .add(GetNowTrendingProductEvent());
                           }
                           if (state is GetProductForAdvertisementFailed) {
                             Fluttertoast.showToast(msg: state.message);
                           }
                         },
-                        child: SizedBox(
-                          height: 30,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            onPressed: () {
-                              context.read<HomePageBloc>().add(
-                                  GetProductForAdvertisement(
-                                      productID: trendingProduct!.productID));
-                            },
-                            child: const Text(
-                              'Order Now',
-                              style: TextStyle(
-                                  color: AppPallete.primaryAppButtonColor),
+                          ),
+                          onPressed: () {
+                            context.read<HomePageBloc>().add(
+                                GetProductForAdvertisement(
+                                    productID: trendingProduct!.productID));
+                          },
+                          child: const Text(
+                            'Order Now',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -126,60 +122,63 @@ class AdvertisementCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(width: 12),
                 Expanded(
+                  flex: 1,
                   child: SizedBox(
-                    height: 150,
+                    height: 140,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
+                        // Background circle gradient
                         ClipOval(
                           child: Container(
                             height: 120,
                             width: 120,
                             decoration: const BoxDecoration(
                               gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                                 colors: [
-                                  AppPallete.gradient2,
+                                  Color.fromARGB(0, 255, 255, 255),
                                   AppPallete.gradient1,
                                 ],
                               ),
                             ),
                           ),
                         ),
+                        // Blur effect
                         ClipOval(
                           child: SizedBox(
-                            width: 150,
-                            height: 150,
-                            child: Stack(
-                              children: [
-                                //blur effect
-                                BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 3,
-                                    sigmaY: 3,
-                                  ),
-                                  child: Container(),
-                                ),
-                              ],
+                            width: 130,
+                            height: 130,
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                              child: Container(
+                                color: Colors.transparent,
+                              ),
                             ),
                           ),
                         ),
-                        CachedNetworkImage(
-                          imageUrl: trendingProduct!.productImageURL,
-                          placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: Colors.grey.shade100,
-                            highlightColor: Colors.grey.shade300,
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: Colors.white,
+                        // Product image
+                        ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: trendingProduct!.productImageURL,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey.shade100,
+                              highlightColor: Colors.grey.shade300,
+                              child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                color: Colors.white,
+                              ),
                             ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 100,
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                          fit: BoxFit.cover,
                         ),
                       ],
                     ),
@@ -189,7 +188,7 @@ class AdvertisementCard extends StatelessWidget {
             ),
           )
         : Container(
-            height: 150,
+            height: 170,
           );
   }
 }

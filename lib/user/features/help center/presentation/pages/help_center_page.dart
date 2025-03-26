@@ -163,7 +163,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                       return Accordion(
                         disableScrolling: true,
                         maxOpenSections: 1,
-                        headerBackgroundColorOpened: Colors.blue,
+                        headerBackgroundColorOpened: const Color.fromARGB(255, 97, 97, 97),
                         openAndCloseAnimation: true,
                         headerPadding: const EdgeInsets.symmetric(
                             vertical: 7, horizontal: 15),

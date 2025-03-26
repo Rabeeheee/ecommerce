@@ -13,71 +13,71 @@ class VendorOrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('No'),);
-    // // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    // context.read<VendorOrderPageBloc>().add(GetAllOrdersForVendorEvent());
-    // // });
-    // return Scaffold(
-    //   resizeToAvoidBottomInset: true,
-    //   extendBody: true,
-    //   extendBodyBehindAppBar: true,
-    //   appBar: const VendorAppBar(title: 'Your Order', bottom: null),
-    //   body: BlocConsumer<VendorOrderPageBloc, VendorOrderPageState>(
-    //     listener: (context, state) {
-    //       if (state is GetAllOrderListFailed) {
-    //         Fluttertoast.showToast(msg: state.message);
-    //       }
-    //       if (state is UpdateOrderDeliveryFailed) {
-    //         Fluttertoast.showToast(msg: state.message);
-    //       }
-    //       if (state is DeliverOrderToAdminSuccess) {
-    //         context
-    //             .read<VendorOrderPageBloc>()
-    //             .add(GetAllOrdersForVendorEvent());
-    //       }
-    //       if (state is DeliverOrderToAdminFailed) {
-    //         Fluttertoast.showToast(msg: state.message);
-    //       }
-    //     },
-    //     builder: (context, state) {
-    //       return state is GetAllOrderListSuccess
-    //           ? state.listOfOrderDetails.isNotEmpty
-    //               ? ListView.separated(
-    //                   itemCount: state.listOfOrderDetails.length,
-    //                   itemBuilder: (context, index) {
-    //                     return OrderTile(
-    //                       onPressedDeliverButton: () {
-    //                         context.read<VendorOrderPageBloc>().add(
-    //                               DeliverOrderToAdminEvent(
-    //                                 order: state.listOfOrderDetails[index],
-    //                               ),
-    //                             );
-    //                       },
-    //                       isUser: false,
-    //                       onTap: () {
-    //                         GoRouter.of(context).pushNamed(
-    //                             AppRouteConstants.vendorOrderDetailsPage,
-    //                             extra: state.listOfOrderDetails[index]);
-    //                       },
-    //                       order: state.listOfOrderDetails[index],
-    //                     );
-    //                   },
-    //                   separatorBuilder: (BuildContext context, int index) {
-    //                     return const SizedBox(
-    //                       height: 10,
-    //                     );
-    //                   },
-    //                 )
-    //               : const Center(
-    //                   child: Text("You don't have any order"),
-    //                 )
-    //           : Shimmer.fromColors(
-    //               baseColor: Colors.grey.shade100,
-    //               highlightColor: Colors.grey.shade300,
-    //               child: Container(),
-    //             );
-    //     },
-    //   ),
-    // );
+    // return Center(child: Text('No'),);
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    context.read<VendorOrderPageBloc>().add(GetAllOrdersForVendorEvent());
+    // });
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      appBar: const VendorAppBar(title: 'Your Order', bottom: null),
+      body: BlocConsumer<VendorOrderPageBloc, VendorOrderPageState>(
+        listener: (context, state) {
+          if (state is GetAllOrderListFailed) {
+            Fluttertoast.showToast(msg: state.message);
+          }
+          if (state is UpdateOrderDeliveryFailed) {
+            Fluttertoast.showToast(msg: state.message);
+          }
+          if (state is DeliverOrderToAdminSuccess) {
+            context
+                .read<VendorOrderPageBloc>()
+                .add(GetAllOrdersForVendorEvent());
+          }
+          if (state is DeliverOrderToAdminFailed) {
+            Fluttertoast.showToast(msg: state.message);
+          }
+        },
+        builder: (context, state) {
+          return state is GetAllOrderListSuccess
+              ? state.listOfOrderDetails.isNotEmpty
+                  ? ListView.separated(
+                      itemCount: state.listOfOrderDetails.length,
+                      itemBuilder: (context, index) {
+                        return OrderTile(
+                          onPressedDeliverButton: () {
+                            context.read<VendorOrderPageBloc>().add(
+                                  DeliverOrderToAdminEvent(
+                                    order: state.listOfOrderDetails[index],
+                                  ),
+                                );
+                          },
+                          isUser: false,
+                          onTap: () {
+                            GoRouter.of(context).pushNamed(
+                                AppRouteConstants.vendorOrderDetailsPage,
+                                extra: state.listOfOrderDetails[index]);
+                          },
+                          order: state.listOfOrderDetails[index],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          height: 10,
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text("You don't have any order"),
+                    )
+              : Shimmer.fromColors(
+                  baseColor: Colors.grey.shade100,
+                  highlightColor: Colors.grey.shade300,
+                  child: Container(),
+                );
+        },
+      ),
+    );
   }
 }

@@ -23,225 +23,386 @@ class UserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<ProfileBloc>().add(GetUserProfileDataEvent());
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        extendBody: true,
-        appBar: const AppBarSearchBar(),
-        body: SingleChildScrollView(
-          child: BlocConsumer<ProfileBloc, ProfileState>(
-            listener: (context, state) {
-              if (state is GetProfileDataFailedState) {
-                Fluttertoast.showToast(msg: state.message);
-              }
-              if (state is GoToOTPPageState) {
-                GoRouter.of(context)
-                    .pushNamed(AppRouteConstants.otpVerificationPage,
-                        extra: OTPParams(
-                          phoneNumber: '',
-                          verificaionID: state.verificationID,
-                          isForSignUp: false,
-                        ));
-              }
-              if (state is FailedToGetVerificationID) {
-                Fluttertoast.showToast(msg: state.message);
-              }
-            },
-            buildWhen: (previous, current) => current is GetProfileDataState,
-            builder: (context, state) {
-              // if(state is GetProfileDataSuccessState){
-              //   return
-              // }
-              return Column(
+      resizeToAvoidBottomInset: false,
+      extendBody: true,
+      appBar: const AppBarSearchBar(),
+      body: BlocConsumer<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state is GetProfileDataFailedState) {
+            Fluttertoast.showToast(msg: state.message);
+          }
+          if (state is GoToOTPPageState) {
+            GoRouter.of(context).pushNamed(
+              AppRouteConstants.otpVerificationPage,
+              extra: OTPParams(
+                phoneNumber: '',
+                verificaionID: state.verificationID,
+                isForSignUp: false,
+              ),
+            );
+          }
+          if (state is FailedToGetVerificationID) {
+            Fluttertoast.showToast(msg: state.message);
+          }
+        },
+        buildWhen: (previous, current) => current is GetProfileDataState,
+        builder: (context, state) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              physics: const BouncingScrollPhysics(),
+              child: Column(
                 children: [
-                  //hello nice to meet you
-                  ProfileWelcomeText(
-                    color: state is GetProfileDataSuccessState ? state.user.color : 2345667,
-                    imageURL: state is GetProfileDataSuccessState ? state.user.profilePhoto! : 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png',
-                    name: state is GetProfileDataSuccessState
-                        ? state.user.username!
-                        : 'Nice to meet you',
-                    subText: state is GetProfileDataSuccessState
-                        ? 'Enjoy your Tech Journey with Tech Haven'
-                        : 'You are currently not signed in',
-                    onTapSettingIcon: () {
-                      GoRouter.of(context)
-                          .pushNamed(AppRouteConstants.profileEditPage);
-                    },
+                  // Profile welcome card with shadow and border radius
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: ProfileWelcomeText(
+                        color: state is GetProfileDataSuccessState ? state.user.color : 2345667,
+                        imageURL: state is GetProfileDataSuccessState 
+                          ? state.user.profilePhoto! 
+                          : 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png',
+                        name: state is GetProfileDataSuccessState
+                          ? state.user.username!
+                          : 'Nice to meet you',
+                        subText: state is GetProfileDataSuccessState
+                          ? 'Enjoy your Tech Journey with Tech Haven'
+                          : 'You are currently not signed in',
+                        onTapSettingIcon: () {
+                          GoRouter.of(context).pushNamed(AppRouteConstants.profileEditPage);
+                        },
+                      ),
+                    ),
                   ),
-                  //your orders
-                  TileBarButton(
-                    title: 'Your Orders',
-                    icon: CustomIcons.orderListSvg,
-                    onTap: () {
-                      GoRouter.of(context)
-                          .pushNamed(AppRouteConstants.userOrderPage);
-                    },
+                  
+                  // Your Orders section
+                  _buildSectionCard(
+                    context,
+                    child: TileBarButton(
+                      title: 'Your Orders',
+                      icon: CustomIcons.orderListSvg,
+                      onTap: () {
+                        GoRouter.of(context).pushNamed(AppRouteConstants.userOrderPage);
+                      },
+                    ),
                   ),
-                  if (state is GetProfileDataSuccessState &&
-                      state.user.phoneNumber == null)
-                    TileBarButton(
+                  
+                  // Phone verification section if needed
+                  if (state is GetProfileDataSuccessState && state.user.phoneNumber == null)
+                    _buildSectionCard(
+                      context,
+                      child: TileBarButton(
                         title: 'Verify Phone Number',
-                        subtitle:
-                            'Verify you phone number to get access to more features',
+                        subtitle: 'Verify your phone number to get access to more features',
                         onTap: () {
                           _showPhoneVerificationDialog(context, false);
                         },
-                        icon: CustomIcons.phoneOutlined),
-                  TileBarButton(
-                    title: state is GetProfileDataSuccessState
+                        icon: CustomIcons.phoneOutlined,
+                      ),
+                    ),
+                  
+                  // Vendor section
+                  _buildSectionCard(
+                    context,
+                    child: TileBarButton(
+                      title: state is GetProfileDataSuccessState
                         ? state.user.isVendor
-                            ? 'Enter Vendor Mode'
-                            : 'Start Selling'
+                          ? 'Enter Vendor Mode'
+                          : 'Start Selling'
                         : 'Please Wait',
-                    subtitle: state is GetProfileDataSuccessState
+                      subtitle: state is GetProfileDataSuccessState
                         ? state.user.isVendor
-                            ? 'Start Selling your new Product!'
-                            : 'Activate this option to start selling your products as a vendor on our platform.'
+                          ? 'Start Selling your new Product!'
+                          : 'Activate this option to start selling your products as a vendor on our platform.'
                         : 'Please Wait',
-                    icon: CustomIcons.cartSvg,
-                    onTap: () {
-                      if (state is GetProfileDataSuccessState &&
-                          state.user.phoneNumber == null) {
-                        return _showPhoneVerificationDialog(context, true);
-                      }
-                      //if the user is vendor we will direct them to vendor else wilill direct him to register page where they will see the status of the vendor status.
-                      state is GetProfileDataSuccessState && state.user.isVendor
-                          ? GoRouter.of(context)
-                              .pushNamed(AppRouteConstants.vendorMainPage)
-                          : state is GetProfileDataSuccessState &&
-                                  !state.user.isVendor
-                              ? GoRouter.of(context).pushNamed(
-                                  AppRouteConstants.registerVendorPage,
-                                  extra: state.user)
-                              : null;
-                    },
+                      icon: CustomIcons.cartSvg,
+                      onTap: () {
+                        if (state is GetProfileDataSuccessState && state.user.phoneNumber == null) {
+                          return _showPhoneVerificationDialog(context, true);
+                        }
+                        state is GetProfileDataSuccessState && state.user.isVendor
+                          ? GoRouter.of(context).pushNamed(AppRouteConstants.vendorMainPage)
+                          : state is GetProfileDataSuccessState && !state.user.isVendor
+                            ? GoRouter.of(context).pushNamed(
+                                AppRouteConstants.registerVendorPage,
+                                extra: state.user)
+                            : null;
+                      },
+                    ),
                   ),
-                  // const ProfileHeaderTile(
-                  //   title: 'SETTINGS',
-                  // ),
-                  // const TileBarButton(
-                  //   title: 'Country',
-                  //   icon: CustomIcons.globeSvg,
-                  // ),
-                  // const TileBarButton(
-                  //   title: 'Language',
-                  //   icon: CustomIcons.languageSvg,
-                  // ),
-                  const ProfileHeaderTile(
-                    title: 'REACH OUT TO US',
+                  
+                  // Support section
+                  _buildSectionWithHeader(
+                    context,
+                    headerTitle: 'REACH OUT TO US',
+                    child: TileBarButton(
+                      title: 'Help Center',
+                      onTap: () {
+                        GoRouter.of(context).pushNamed(AppRouteConstants.helpCenterPage);
+                      },
+                      icon: CustomIcons.questionMarkSvg,
+                    ),
                   ),
-                  TileBarButton(
-                    title: 'Help Center',
-                    onTap: () {
-                      GoRouter.of(context)
-                          .pushNamed(AppRouteConstants.helpCenterPage);
-                    },
-                    icon: CustomIcons.questionMarkSvg,
+                  
+                  // About Us section
+                  _buildSectionWithHeader(
+                    context,
+                    headerTitle: 'ABOUT US',
+                    children: [
+                      TileBarButton(
+                        title: 'About App',
+                        onTap: () {
+                          GoRouter.of(context).pushNamed(AppRouteConstants.aboutAppPage);
+                        },
+                        icon: CustomIcons.exclamationSvg,
+                      ),
+                      const Divider(height: 1),
+                      TileBarButton(
+                        title: 'Terms And Conditions',
+                        onTap: () {
+                          GoRouter.of(context).pushNamed(AppRouteConstants.termsAndConditionsPage);
+                        },
+                        icon: CustomIcons.fileCheck,
+                      ),
+                      const Divider(height: 1),
+                      TileBarButton(
+                        title: 'Privacy Policy',
+                        onTap: () {
+                          GoRouter.of(context).pushNamed(AppRouteConstants.privacyPolicyPage);
+                        },
+                        icon: CustomIcons.lockOutlinedSvg,
+                      ),
+                    ],
                   ),
-                  const ProfileHeaderTile(
-                    title: 'ABOUT US',
+                  
+                  // Sign Out button
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 24.0),
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        showConfirmationDialog(
+                          context, 
+                          'Sign Out',
+                          'Are you sure you want to sign out', 
+                          () async {
+                            await FirebaseAuth.instance.signOut();
+                            GoogleSignIn googleSignIn = GoogleSignIn();
+                            await googleSignIn.signOut();
+                            GoRouter.of(context).goNamed(AppRouteConstants.splashScreen);
+                          }
+                        );
+                      },
+                      icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+                      label: Text(
+                        'Sign Out',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        backgroundColor: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
                   ),
-                  TileBarButton(
-                    title: 'About App',
-                    onTap: () {
-                      GoRouter.of(context)
-                          .pushNamed(AppRouteConstants.aboutAppPage);
-                    },
-                    icon: CustomIcons.exclamationSvg,
-                  ),
-                  TileBarButton(
-                    title: 'Terms And Conditions',
-                    onTap: () {
-                      GoRouter.of(context)
-                          .pushNamed(AppRouteConstants.termsAndConditionsPage);
-                    },
-                    icon: CustomIcons.fileCheck,
-                  ),
-                  TileBarButton(
-                    title: 'Privacy Policy',
-                    onTap: () {
-                      GoRouter.of(context)
-                          .pushNamed(AppRouteConstants.privacyPolicyPage);
-                    },
-                    icon: CustomIcons.lockOutlinedSvg,
-                  ),
-
-                  TileBarButton(
-                    title: 'Sign Out',
-                    icon: CustomIcons.rightArrowExitSvg,
-                    onTap: () {
-                      showConfirmationDialog(context, 'Sign Out',
-                          'Are you sure you want to sign out', () async {
-                        await FirebaseAuth.instance.signOut();
-                        GoogleSignIn googleSignIn = GoogleSignIn();
-                        await googleSignIn.signOut();
-                        GoRouter.of(context)
-                            .goNamed(AppRouteConstants.splashScreen);
-                      });
-                      // context.read<AuthBloc>().add(SignOutUserEvent());
-                    },
-                  ),
-                  // Row(
-                  //   children: [
-                  //     Icon(Icons.card_travel),
-                  //     Text('data'),
-                  //   ],
-                  // )
+                  
+                  // Bottom spacing
+                  const SizedBox(height: 24),
                 ],
-              );
-            },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+  
+  // Helper method to build a section card with shadow and border radius
+  Widget _buildSectionCard(BuildContext context, {required Widget child}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
-        ));
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: child,
+      ),
+    );
+  }
+  
+  // Helper method to build a section with header and multiple children
+  Widget _buildSectionWithHeader(
+    BuildContext context, {
+    required String headerTitle,
+    Widget? child,
+    List<Widget>? children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+          child: Text(
+            headerTitle,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.primary,
+              letterSpacing: 1.2,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 16.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(12.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: child != null
+                ? child
+                : Column(
+                    children: children ?? [],
+                  ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
 ValueNotifier<String> countryCode = ValueNotifier('000');
 
-void _showPhoneVerificationDialog(
-    BuildContext context, bool forVendorRegistration) {
+void _showPhoneVerificationDialog(BuildContext context, bool forVendorRegistration) {
   final TextEditingController phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   showDialog(
     context: context,
+    barrierDismissible: true,
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          forVendorRegistration
-              ? 'Verify Your Phone Number first to Register for Vendor'
-              : 'Verify Phone Number',
-          style: const TextStyle(
-            fontSize: 15,
-          ),
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Form(
-              key: formKey,
-              child: PhoneNumberTextField(
-                countryCode: countryCode,
-                textFormFieldEnabled: true,
-                phoneNumberController: phoneController,
+        elevation: 8.0,
+        backgroundColor: Theme.of(context).cardColor,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                forVendorRegistration
+                    ? 'Verify Your Phone Number'
+                    : 'Verify Phone Number',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
-            )
-          ],
-        ),
-        actions: [
-          RoundedRectangularButton(
-            title: 'Verify',
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                String phoneNumber =
-                    '+${countryCode.value}${phoneController.text}';
-                // Implement verification logic here
-                context.read<ProfileBloc>().add(SendOTPForGoogleLoginEvent(
-                      phoneNumber: phoneNumber,
-                    ));
-                Navigator.of(context).pop();
-              }
-            },
+              if (forVendorRegistration)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    'Phone verification is required to register as a vendor',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 16),
+              Form(
+                key: formKey,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                    ),
+                  ),
+                  child: PhoneNumberTextField(
+                    countryCode: countryCode,
+                    textFormFieldEnabled: true,
+                    phoneNumberController: phoneController,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  RoundedRectangularButton(
+                    title: 'Verify',
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        String phoneNumber = '+${countryCode.value}${phoneController.text}';
+                        // Implement verification logic here
+                        context.read<ProfileBloc>().add(SendOTPForGoogleLoginEvent(
+                          phoneNumber: phoneNumber,
+                        ));
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       );
     },
   );

@@ -19,7 +19,7 @@ class CustomBackButton extends StatelessWidget {
       circularButtonChild: const SvgIcon(
         icon: CustomIcons.arrowLeftSvg,
         radius: 25,
-        // color: AppPallete.whiteColor,
+        color: Color.fromARGB(255, 0, 0, 0),
       ),
       diameter: 40,
       color: AppPallete.whiteColor,
