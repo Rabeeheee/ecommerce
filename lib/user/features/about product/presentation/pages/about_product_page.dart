@@ -35,54 +35,56 @@ class _AboutProductPageState extends State<AboutProductPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarSearchBar(
-        favouriteIconNeeded: true,
-        backButton: true,
-      ),
-      body: Column(
-        children: [
-          TabBar(
-            indicatorSize: TabBarIndicatorSize.tab,
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Overview'),
-              Tab(text: 'Specifications'),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
+    return SafeArea(
+      child: Scaffold(
+        appBar: const AppBarSearchBar(
+          favouriteIconNeeded: true,
+          backButton: true,
+        ),
+        body: Column(
+          children: [
+            TabBar(
+              indicatorSize: TabBarIndicatorSize.tab,
               controller: _tabController,
-              children: [
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Text(
-                      widget.toAboutProductPage.overview,
-                      style: const TextStyle(
-                        overflow: TextOverflow.fade,
-                        fontSize: 12,
+              tabs: const [
+                Tab(text: 'Overview'),
+                Tab(text: 'Specifications'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Text(
+                        widget.toAboutProductPage.overview,
+                        style: const TextStyle(
+                          overflow: TextOverflow.fade,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SpecificationListView(
-                  canScroll: true,
-                  specifications: widget.toAboutProductPage.specifications,
-                )
-              ],
+                  SpecificationListView(
+                    canScroll: true,
+                    specifications: widget.toAboutProductPage.specifications,
+                  )
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 60,
-            child: CustomBlurButton(
-                up: true,
-                title: 'Go Back',
-                onPressed: () {
-                  GoRouter.of(context).pop();
-                }),
-          )
-        ],
+            SizedBox(
+              height: 60,
+              child: CustomBlurButton(
+                  up: true,
+                  title: 'Go Back',
+                  onPressed: () {
+                    GoRouter.of(context).pop();
+                  }),
+            )
+          ],
+        ),
       ),
     );
   }

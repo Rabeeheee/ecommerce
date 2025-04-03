@@ -22,7 +22,7 @@ class CustomBackButton extends StatelessWidget {
         color: Color.fromARGB(255, 0, 0, 0),
       ),
       diameter: 40,
-      color: AppPallete.whiteColor,
+      color: const Color.fromARGB(255, 243, 243, 243),
       shadow: false,
     );
   }

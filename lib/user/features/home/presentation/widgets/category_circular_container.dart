@@ -63,7 +63,7 @@ class CategoryCircularContainer extends StatelessWidget {
                       ),
                     ),
                     errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                        Image.asset('assets/images/category.jpg',width: 50,height: 50,),
                   ),
             // const SizedBox(height: 8),
             Text(

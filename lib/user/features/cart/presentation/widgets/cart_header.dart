@@ -5,8 +5,8 @@ import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/title_with_count_bar.dart';
 
-class cartHeader extends StatelessWidget {
-  const cartHeader({
+class CartHeader extends StatelessWidget {
+  const CartHeader({
     super.key,
   });
 

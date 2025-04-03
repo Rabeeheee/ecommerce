@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       context.read<HomePageBloc>().add(GetAllSubCategoriesHomeEvent());
       context.read<HomePageBloc>().add(GetNowTrendingProductEvent());
     });
-    // print('hskdfsjdhfjs');
+     // print('hskdfsjdhfjs');
     return Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,
@@ -65,9 +65,10 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
+                  SizedBox(height: 10,),
                   
                   ConstrainedBox(
-                      constraints: BoxConstraints.tight(const Size(2000, 300)),
+                      constraints: BoxConstraints.tight(const Size(2000, 200)),
                       child: const CarouselBannerContainer()),
                   Center(
                     child: Container(

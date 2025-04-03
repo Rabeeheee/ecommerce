@@ -22,4 +22,6 @@ class AppPallete {
   static const Color appShadowColor = Color.fromRGBO(0, 0, 0, 0.25);
   static const String primaryAppFont = 'BeVietnamPro';
   static const Color  cardBackgroundColor =  Color.fromRGBO(72, 70, 172, 1);
+ static const Color primaryBlack = Color(0xFF121212);
+   static const Color offWhite = Color(0xFFF5F5F5);
 }

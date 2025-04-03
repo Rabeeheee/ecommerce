@@ -8,7 +8,6 @@ import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
-import 'package:tech_haven/core/theme/theme.dart';
 
 class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   final String hintText;
@@ -56,7 +55,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: AppPallete.lightgreyColor,
+                        color: const Color.fromARGB(255, 219, 219, 219),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -93,7 +92,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppPallete.lightgreyColor,
+                        color:  const Color.fromARGB(255, 219, 219, 219),
                         shape: BoxShape.circle,
                       ),
                       child: const SvgIcon(
@@ -115,7 +114,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppPallete.lightgreyColor,
+                    color:  const Color.fromARGB(255, 219, 219, 219),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: BlocConsumer<CommonBloc, CommonState>(
@@ -152,7 +151,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                             child: Text(
                               state is LocationSuccessState &&
                                       state.location != null
-                                  ? '${state.location!.location}'
+                                  ? state.location!.location
                                   : "Click here to enter your location", overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 13,

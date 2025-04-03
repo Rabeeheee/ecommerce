@@ -6,10 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 
@@ -42,6 +40,9 @@ class CarouselBannerContainer extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is GetAllBannerHomeSuccess) {
+            if(state.listOfBanners.isEmpty){
+              return SizedBox();
+            }
             return CarouselSlider.builder(
               options: _carouselOptions(context),
               itemCount: state.listOfBanners.length,
@@ -104,7 +105,7 @@ class CarouselBannerContainer extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       imageBuilder: (context, imageProvider) => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [
@@ -122,7 +123,7 @@ class CarouselBannerContainer extends StatelessWidget {
             children: [
               Image(
                 image: imageProvider,
-                fit: BoxFit.cover,
+                fit: BoxFit.cover
               ),
               // Gradient overlay
               Container(
@@ -174,21 +175,27 @@ class CarouselBannerContainer extends StatelessWidget {
   }
 
   Widget _buildErrorCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.grey.shade200,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 5,
-          ),
-        ],
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 5,
+        ),
+      ],
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Image.asset(
+        'assets/images/banner.jpg',
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
       ),
-      child: const Center(
-        child: Icon(Icons.error, color: Colors.redAccent, size: 40),
-      ),
-    );
-  }
+    ),
+  );
+}
+
 }

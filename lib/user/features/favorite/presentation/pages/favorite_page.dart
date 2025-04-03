@@ -7,7 +7,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/title_with_count_bar.dart';
 import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
@@ -34,33 +33,22 @@ class FavoritePage extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<FavoritePageBloc>().add(GetAllFavoritedProducts());
     });
-    // var items = [
-    //   '1',
-    //   '2',
-    //   '3',
-    //   '4',
-    //   '5',
-    // ];
+
     return SafeArea(
       child: Scaffold(
-        
         resizeToAvoidBottomInset: false,
         appBar: const AppBarSearchBar(
           favouriteIconNeeded: false,
           backButton: true,
+          
         ),
         body: Column(
           children: [
+            // Header Section
             BlocBuilder<FavoritePageBloc, FavoritePageState>(
               builder: (context, state) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                  ),
-                  color: AppPallete.lightgreyColor,
-                  height: 50,
-                  width: double.infinity,
-                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -70,27 +58,29 @@ class FavoritePage extends StatelessWidget {
                             ? '${state.listOfFavoritedProduct.length} Items'
                             : '0 Items',
                         isForFavorite: true,
+                        
+                        
                       ),
                     ],
                   ),
                 );
               },
             ),
+            // Product List Section
             Expanded(
               child: BlocConsumer<FavoritePageBloc, FavoritePageState>(
                 listener: (context, state) {
                   if (state is FavoriteRemovedSuccess) {
-                    context
-                        .read<FavoritePageBloc>()
-                        .add(GetAllFavoritedProducts());
+                    context.read<FavoritePageBloc>().add(GetAllFavoritedProducts());
                     context.read<HomePageBloc>().add(GetAllProductsEvent());
                   }
                   if (state is FavoritePageLoadedFailed) {
                     showSnackBar(
-                        context: context,
-                        title: 'Oh',
-                        content: state.message,
-                        contentType: ContentType.failure);
+                      context: context,
+                      title: 'Oh',
+                      content: state.message,
+                      contentType: ContentType.failure,
+                    );
                   }
                 },
                 builder: (context, state) {
@@ -98,73 +88,87 @@ class FavoritePage extends StatelessWidget {
                     return state.listOfFavoritedProduct.isEmpty
                         ? const Center(
                             child: Text(
-                              'Your Favorite Is Empty',
-                              style: TextStyle(color: AppPallete.blackColor),
+                              'Your Favorites Are Empty',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 18,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
                           )
                         : ListView.separated(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             itemCount: state.listOfFavoritedProduct.length,
                             itemBuilder: (context, index) {
                               final product = state.listOfFavoritedProduct[index];
-                              return RectangularProductCard(
-                                isFavorite: true,
-                                // items: items,
-      
-                                onTap: () {
-                                  GoRouter.of(context).pushNamed(
-                                      AppRouteConstants.detailsPage,
-                                      extra: product);
-                                },
-                                isFavoriteCard: true,
-                                productName: product.name,
-                                productPrize: product.prize.toString(),
-                                vendorName: product.vendorName,
-                                deliveryDate: product.mainCategory,
-                                onTapFavouriteButton: (bool isLiked) async {
-                                  final boolean = await updateProductToFavorite(
-                                      product: product);
-                                  return !boolean;
-                                },
-                                productImage: product.displayImageURL,
-                                textEditingController: null,
-                              );
-                            },
-                            separatorBuilder: (BuildContext context, int index) {
                               return Container(
-                                height: 10,
-                                color: AppPallete.lightgreyColor,
+                                margin: const EdgeInsets.symmetric(horizontal: 15),
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(26, 0, 0, 0), // Slight white tint for contrast
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.05),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: RectangularProductCard(
+                                  isFavorite: true,
+                                  onTap: () {
+                                    GoRouter.of(context).pushNamed(
+                                      AppRouteConstants.detailsPage,
+                                      extra: product,
+                                    );
+                                  },
+                                  isFavoriteCard: true,
+                                  productName: product.name,
+                                  productPrize: product.prize.toString(),
+                                  vendorName: product.vendorName,
+                                  deliveryDate: product.mainCategory,
+                                  onTapFavouriteButton: (bool isLiked) async {
+                                    final boolean = await updateProductToFavorite(
+                                        product: product);
+                                    return !boolean;
+                                  },
+                                  productImage: product.displayImageURL,
+                                  textEditingController: null,
+                                  
+                                ),
                               );
                             },
+                            separatorBuilder: (context, index) => const SizedBox(height: 15),
                           );
                   }
+                  // Shimmer Loading Effect
                   return ListView.separated(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     itemCount: 10,
                     itemBuilder: (context, index) {
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey.shade100,
-                        highlightColor: Colors.grey.shade300,
-                        child: RectangularProductCard(
-                          // items: items,
-                          onTap: () {},
-                          isFavoriteCard: true,
-                          productName: 'name',
-                          productPrize: '000',
-                          vendorName: ' vendor',
-                          deliveryDate: 'Category',
-                          productImage: null, textEditingController: null,
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade900,
+                          highlightColor: Colors.grey.shade800,
+                          child: RectangularProductCard(
+                            onTap: () {},
+                            isFavoriteCard: true,
+                            productName: 'Loading...',
+                            productPrize: '000',
+                            vendorName: 'Vendor',
+                            deliveryDate: 'Category',
+                            productImage: null,
+                            textEditingController: null,
+                          ),
                         ),
                       );
                     },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 10,
-                        color: AppPallete.lightgreyColor,
-                      );
-                    },
+                    separatorBuilder: (context, index) => const SizedBox(height: 15),
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
       ),

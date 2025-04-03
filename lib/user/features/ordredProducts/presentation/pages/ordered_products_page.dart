@@ -18,33 +18,35 @@ class OrderedProductsPage extends StatelessWidget {
         .read<OrderedProductsPageBloc>()
         .add(FetchOrderProductsEvent(orderId: orderID));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Product Details'),
-        leading: const CustomBackButton(),
-        backgroundColor: AppPallete.whiteColor,
-      ),
-      body: BlocBuilder<OrderedProductsPageBloc, OrderedProductsPageState>(
-        builder: (context, state) {
-          if (state is OrderedProductsPageLoading) {
-            return const Loader();
-          } else if (state is OrderedProductsPageError) {
-            return Center(child: Text(state.message));
-          } else if (state is OrderedProductsPageLoaded) {
-            final products = state.products;
-            if (products.isEmpty) {
-              return const Center(child: Text('No products found'));
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Product Details'),
+          leading: const CustomBackButton(),
+          backgroundColor: AppPallete.whiteColor,
+        ),
+        body: BlocBuilder<OrderedProductsPageBloc, OrderedProductsPageState>(
+          builder: (context, state) {
+            if (state is OrderedProductsPageLoading) {
+              return const Loader();
+            } else if (state is OrderedProductsPageError) {
+              return Center(child: Text(state.message));
+            } else if (state is OrderedProductsPageLoaded) {
+              final products = state.products;
+              if (products.isEmpty) {
+                return const Center(child: Text('No products found'));
+              }
+              return ListView.builder(
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  return OrderedProductCard(product: products[index]);
+                },
+              );
+            } else {
+              return const Center(child: Text('Something went wrong'));
             }
-            return ListView.builder(
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                return OrderedProductCard(product: products[index]);
-              },
-            );
-          } else {
-            return const Center(child: Text('Something went wrong'));
-          }
-        },
+          },
+        ),
       ),
     );
   }

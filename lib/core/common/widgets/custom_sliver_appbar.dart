@@ -21,10 +21,11 @@ class CustomSliverAppBar extends StatelessWidget
       automaticallyImplyLeading: false,
       pinned: true,
       floating: true,
+      backgroundColor: Colors.white,
       //the whole height of the appBar
-      expandedHeight: 150,
+      expandedHeight: 160,
       //the height of the app bar when it is collapsed or scrolled
-      collapsedHeight: 100,
+      collapsedHeight: 120,
       stretchTriggerOffset: 100,
       onStretchTrigger: () async {},
       flexibleSpace: FlexibleSpaceBar(
@@ -35,6 +36,7 @@ class CustomSliverAppBar extends StatelessWidget
             scale: 10,
             Constants.techHavenLogoHR,
           ),
+          
         ),
         expandedTitleScale: 1,
         centerTitle: true,

@@ -83,7 +83,7 @@ class DealsProductCard extends StatelessWidget {
                                 topRight: Radius.circular(10),
                               ),
                             ),
-                            child: const Icon(Icons.error),
+                            child: Image.asset('assets/images/category.jpg'),
                           ),
                         ),
 

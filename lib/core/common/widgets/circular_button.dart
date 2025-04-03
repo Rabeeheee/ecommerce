@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/constants/constants.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class CircularButton extends StatelessWidget {
   const CircularButton({

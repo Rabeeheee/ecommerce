@@ -111,7 +111,7 @@ class ProductCard extends StatelessWidget {
                                           ),
                                         ),
                                         errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
+                                            Image.asset('assets/images/category.jpg')
                                       ),
                                     )
                                   : CachedNetworkImage(
@@ -131,7 +131,7 @@ class ProductCard extends StatelessWidget {
                                         ),
                                       ),
                                       errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
+                                          Image.asset('assets/images/category.jpg'),
                                     ),
                             ),
 

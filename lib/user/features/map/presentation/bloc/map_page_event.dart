@@ -14,6 +14,7 @@ final class UpdateLocationDetailsEvent extends MapPageEvent {
   final String apartmentHouseNumber;
   final String emailAdress;
   final String addressInstructions;
+  
   const UpdateLocationDetailsEvent(
       {
       required this.name,

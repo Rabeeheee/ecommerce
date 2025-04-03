@@ -12,7 +12,6 @@ import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:tech_haven/user/features/profile/presentation/widgets/profile_header_tile.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_welcome_text.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/tile_bar_button.dart';
 
@@ -195,6 +194,7 @@ class UserProfilePage extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(vertical: 24.0),
                     width: double.infinity,
                     child: ElevatedButton.icon(
+                      
                       onPressed: () {
                         showConfirmationDialog(
                           context, 
@@ -208,17 +208,17 @@ class UserProfilePage extends StatelessWidget {
                           }
                         );
                       },
-                      icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+                      icon: Icon(Icons.logout, color: Colors.white),
                       label: Text(
                         'Sign Out',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        backgroundColor: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                        backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -227,7 +227,7 @@ class UserProfilePage extends StatelessWidget {
                   ),
                   
                   // Bottom spacing
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 60),
                 ],
               ),
             ),
