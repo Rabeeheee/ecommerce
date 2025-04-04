@@ -109,8 +109,6 @@ class RevenueBloc extends Bloc<RevenueEvent, RevenueState> {
             .where((payment) => payment.dateTime.year == now.month - 1)
             .toList();
 
-      default:
-        return payments;
-    }
+      }
   }
 }

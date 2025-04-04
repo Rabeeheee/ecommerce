@@ -180,6 +180,7 @@ class CartPage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                     boxShadow: [
                                       BoxShadow(
+                                        // ignore: deprecated_member_use
                                         color: Colors.black.withOpacity(0.05),
                                         blurRadius: 10,
                                         offset: const Offset(0, 4),
@@ -280,6 +281,7 @@ class CartPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
+                                  // ignore: deprecated_member_use
                                   color: Colors.black.withOpacity(0.05),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
@@ -329,6 +331,7 @@ class CartPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
+                                      // ignore: deprecated_member_use
                                       color: Colors.black.withOpacity(0.2),
                                       blurRadius: 10,
                                       offset: const Offset(0, 4),
@@ -393,6 +396,7 @@ class CartPage extends StatelessWidget {
                               ),
                               boxShadow: [
                                 BoxShadow(
+                                  // ignore: deprecated_member_use
                                   color: Colors.black.withOpacity(0.1),
                                   blurRadius: 15,
                                   offset: const Offset(0, -5),
@@ -430,7 +434,7 @@ class CartPage extends StatelessWidget {
                 },
               );
             }
-            return const SizedBox(); // Return a SizedBox if state is not CartProductsListViewSuccess
+            return const SizedBox(); 
           },
         ),
       ),

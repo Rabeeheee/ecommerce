@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/entities/vendor.dart';
-import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/vendor/features/profile/domain/usecase/get_vendor_profile.dart';
 

@@ -63,6 +63,7 @@ class UserProfilePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16.0),
                       boxShadow: [
                         BoxShadow(
+                          // ignore: deprecated_member_use
                           color: Colors.black.withOpacity(0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
@@ -204,6 +205,7 @@ class UserProfilePage extends StatelessWidget {
                             await FirebaseAuth.instance.signOut();
                             GoogleSignIn googleSignIn = GoogleSignIn();
                             await googleSignIn.signOut();
+                            // ignore: use_build_context_synchronously
                             GoRouter.of(context).goNamed(AppRouteConstants.splashScreen);
                           }
                         );
@@ -246,6 +248,7 @@ class UserProfilePage extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
@@ -288,6 +291,7 @@ class UserProfilePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(0.04),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
@@ -296,9 +300,7 @@ class UserProfilePage extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
-            child: child != null
-                ? child
-                : Column(
+            child: child ?? Column(
                     children: children ?? [],
                   ),
           ),
@@ -347,6 +349,7 @@ void _showPhoneVerificationDialog(BuildContext context, bool forVendorRegistrati
                     'Phone verification is required to register as a vendor',
                     style: TextStyle(
                       fontSize: 14,
+                      // ignore: deprecated_member_use
                       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                     ),
                   ),
@@ -359,6 +362,7 @@ void _showPhoneVerificationDialog(BuildContext context, bool forVendorRegistrati
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
+                      // ignore: deprecated_member_use
                       color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
                     ),
                   ),

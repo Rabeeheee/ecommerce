@@ -364,7 +364,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                             ),
                           ...specifications.entries.map((entry) {
                             return Text("${entry.key}: ${entry.value}");
-                          }).toList(),
+                          }),
                         ],
                       ),
 
@@ -526,17 +526,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                               title:
                                   widget.product != null ? 'Update' : 'Publish',
                               onPressed: () {
-                                print(
-                                  "Form Valid: ${globalFormKey.currentState!.validate()}",
-                                );
-                                print("Category Indexes: $categoryIndexes");
-                                print(
-                                  "Selected Brand Index: $selectedBrandIndex",
-                                );
-                                print("Specifications: $specifications");
-                                print(
-                                  "Product Images Length: ${productImages.length}",
-                                );
+                              
+                               
 
                                 if (widget.product != null &&
                                     globalFormKey.currentState!.validate() &&

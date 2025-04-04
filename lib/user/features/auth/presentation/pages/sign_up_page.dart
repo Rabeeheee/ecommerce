@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -267,7 +268,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           verificationCompleted: (phoneAuthCredential) {},
                           verificationFailed: (error) {},
                           codeSent: (verificationId, forceResendingToken) {
-                            print(verificationId);
+                            if (kDebugMode) {
+                              print(verificationId);
+                            }
                             GoRouter.of(context).pushNamed(
                               AppRouteConstants.otpVerificationPage,
                               extra: OTPParams(

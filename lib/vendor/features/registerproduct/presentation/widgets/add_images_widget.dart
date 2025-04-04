@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
@@ -152,6 +151,7 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                               },
                               child: Container(
                                 alignment: Alignment.center,
+                                // ignore: deprecated_member_use
                                 color: Colors.red.withOpacity(0.5),
                                 child: const Center(
                                   child: Text(

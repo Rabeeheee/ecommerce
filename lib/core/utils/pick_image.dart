@@ -32,7 +32,9 @@ Future<Uint8List?> pickImageForWeb() async {
     }
     return null;
   } catch (e) {
-    print(e.toString());
+    if (kDebugMode) {
+      print(e.toString());
+    }
   }
   return null;
 }

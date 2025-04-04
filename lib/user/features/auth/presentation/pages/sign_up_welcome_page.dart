@@ -67,6 +67,7 @@ class SignUpWelcomePage extends StatelessWidget {
                     isProfilePhotoUploaded: image.value != null,
                     image: image.value,
                     username: username.value,
+                    // ignore: deprecated_member_use
                     color: userColor.value,
                   ),
                 );
@@ -209,6 +210,7 @@ class SignUpWelcomePage extends StatelessWidget {
                               currency: currentCurrency.value!.name,
                               currencySymbol: currentCurrency.value!.symbol,
                               image: image.value,
+                              // ignore: deprecated_member_use
                               color: userColor.value,
                             ),
                           );

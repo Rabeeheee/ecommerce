@@ -73,9 +73,11 @@ class SearchCategoryPage extends StatelessWidget {
                       width: Responsive.isMobile(context) ? 120 : 200,
                       height: MediaQuery.of(context).size.height,
                       decoration: BoxDecoration(
+                        // ignore: deprecated_member_use
                         color: AppPallete.darkgreyColor.withOpacity(0.5),
                         boxShadow: [
                           BoxShadow(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
@@ -101,6 +103,7 @@ class SearchCategoryPage extends StatelessWidget {
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
+                                        // ignore: deprecated_member_use
                                         color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
                                         blurRadius: 4,
                                         offset: const Offset(0, 2),
@@ -131,6 +134,7 @@ class SearchCategoryPage extends StatelessWidget {
                                     duration: const Duration(milliseconds: 500),
                                     curve: Curves.easeInOut);
                               },
+                              // ignore: deprecated_member_use
                               splashColor: AppPallete.primaryAppColor.withOpacity(0.3),
                               horizontalTitleGap: 8,
                               titleAlignment: ListTileTitleAlignment.center,
@@ -217,6 +221,7 @@ class SearchCategoryPage extends StatelessWidget {
                                               borderRadius: BorderRadius.circular(16),
                                               boxShadow: [
                                                 BoxShadow(
+                                                  // ignore: deprecated_member_use
                                                   color: Colors.black.withOpacity(0.1),
                                                   blurRadius: 10,
                                                   offset: const Offset(0, 4),
@@ -286,17 +291,21 @@ class SearchCategoryPage extends StatelessWidget {
                                                     margin: const EdgeInsets.only(bottom: 8),
                                                     decoration: BoxDecoration(
                                                       color: isOpen 
+                                                          // ignore: deprecated_member_use
                                                           ? AppPallete.lightgreyColor.withOpacity(0.3) 
                                                           : Colors.white,
                                                       borderRadius: BorderRadius.circular(12),
                                                       border: Border.all(
                                                         color: isOpen 
+                                                            // ignore: deprecated_member_use
                                                             ? const Color.fromARGB(255, 0, 0, 0).withOpacity(0.5) 
+                                                            // ignore: deprecated_member_use
                                                             : Colors.grey.withOpacity(0.2),
                                                         width: 1,
                                                       ),
                                                       boxShadow: [
                                                         BoxShadow(
+                                                          // ignore: deprecated_member_use
                                                           color: Colors.black.withOpacity(0.05),
                                                           blurRadius: 5,
                                                           offset: const Offset(0, 2),
@@ -341,6 +350,7 @@ class SearchCategoryPage extends StatelessWidget {
                                                                         decoration: BoxDecoration(
                                                                           color: isOpen
                                                                               ? const Color.fromARGB(255, 0, 0, 0)
+                                                                              // ignore: deprecated_member_use
                                                                               : Colors.grey.withOpacity(0.5),
                                                                           borderRadius: BorderRadius.circular(2),
                                                                         ),
@@ -361,6 +371,7 @@ class SearchCategoryPage extends StatelessWidget {
                                                                     decoration: BoxDecoration(
                                                                       shape: BoxShape.circle,
                                                                       color: isOpen 
+                                                                          // ignore: deprecated_member_use
                                                                           ? const Color.fromARGB(255, 0, 0, 0).withOpacity(0.1) 
                                                                           : Colors.transparent,
                                                                     ),
@@ -420,6 +431,7 @@ class SearchCategoryPage extends StatelessWidget {
                                                                         borderRadius: BorderRadius.circular(10),
                                                                         boxShadow: [
                                                                           BoxShadow(
+                                                                            // ignore: deprecated_member_use
                                                                             color: Colors.black.withOpacity(0.05),
                                                                             blurRadius: 4,
                                                                             offset: const Offset(0, 2),

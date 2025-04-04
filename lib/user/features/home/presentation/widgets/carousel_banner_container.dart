@@ -130,8 +130,10 @@ class CarouselBannerContainer extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
+                      // ignore: deprecated_member_use
                       Colors.black.withOpacity(0.4),
                       Colors.transparent,
+                      // ignore: deprecated_member_use
                       Colors.black.withOpacity(0.3),
                     ],
                     begin: Alignment.topCenter,

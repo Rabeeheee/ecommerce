@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class SvgIcon extends StatelessWidget {
   const SvgIcon({

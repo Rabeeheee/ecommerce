@@ -8,7 +8,6 @@ import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
 import 'package:tech_haven/core/common/widgets/order_tile.dart';
 
@@ -81,6 +80,7 @@ class UserOrderPage extends StatelessWidget {
                       Icon(
                         Icons.shopping_bag_outlined, 
                         size: 100, 
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.4),
                       ),
                       const SizedBox(height: 16),
@@ -126,6 +126,7 @@ class UserOrderPage extends StatelessWidget {
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.1),
                         thickness: 0.5,
                       );

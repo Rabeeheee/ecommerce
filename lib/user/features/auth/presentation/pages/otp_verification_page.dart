@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,7 +75,9 @@ class OTPVerificationPage extends StatelessWidget {
   }
 
   Widget _buildOTPMobileLayout(BuildContext context) {
-    print('rebuilding otp mobile');
+    if (kDebugMode) {
+      print('rebuilding otp mobile');
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -93,25 +96,11 @@ class OTPVerificationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOTPDesktopLayout(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 415, maxWidth: 415),
-          child: Lottie.asset('assets/lotties/otp_lottie.json'),
-        ),
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
-          child: _buildOTPAuthenticationContainer(context),
-        ),
-      ],
-    );
-  }
 
   Widget _buildOTPAuthenticationContainer(BuildContext context) {
-    print('hi');
+    if (kDebugMode) {
+      print('hi');
+    }
     const fillColor = AppPallete.lightgreyColor;
     final defaultPinTheme = PinTheme(
       width: 56,
@@ -158,7 +147,9 @@ class OTPVerificationPage extends StatelessWidget {
                     },
                     hapticFeedbackType: HapticFeedbackType.lightImpact,
                     onCompleted: (pinCode) {
-                      print(pinCode);
+                      if (kDebugMode) {
+                        print(pinCode);
+                      }
                       if (otpParams.isForSignUp) {
                         context.read<AuthBloc>().add(
                               VerifyPhoneAndSignUpUserEvent(

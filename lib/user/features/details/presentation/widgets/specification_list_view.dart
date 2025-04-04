@@ -24,6 +24,7 @@ class SpecificationListView extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 2),
             decoration: BoxDecoration(
               color: index % 2 != 0
+                  // ignore: deprecated_member_use
                   ? Colors.grey.withOpacity(0.5) // Replace with your color
                   : Colors.white,
               borderRadius: const BorderRadius.all(

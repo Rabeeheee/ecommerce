@@ -116,8 +116,7 @@ class AppRoutes {
           // final uri = Uri.parse(state.uri.toString());
           final String redirectStatus =
               jsonEncode(state.uri.queryParameters['redirect_status']);
-          final String errorStatus =
-              jsonEncode(state.uri.queryParameters['error']);
+          jsonEncode(state.uri.queryParameters['error']);
           // print(redirectStatus);
 
           return PaymentStatusPage(

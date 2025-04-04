@@ -148,6 +148,7 @@ class SideMenuState extends State<SideMenu> {
                                           GoogleSignIn googleSignIn =
                                               GoogleSignIn();
                                           await googleSignIn.signOut();
+                                          // ignore: use_build_context_synchronously
                                           GoRouter.of(context).goNamed(
                                               AppRouteConstants.splashScreen);
                                         });
@@ -204,6 +205,7 @@ class SideMenuState extends State<SideMenu> {
                                               GoogleSignIn googleSignIn =
                                                   GoogleSignIn();
                                               await googleSignIn.signOut();
+                                              // ignore: use_build_context_synchronously
                                               GoRouter.of(context).goNamed(
                                                   AppRouteConstants
                                                       .splashScreen);

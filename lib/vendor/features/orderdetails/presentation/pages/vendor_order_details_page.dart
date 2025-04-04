@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
-import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/entities/order.dart' as model;
 import 'package:tech_haven/core/entities/product_order.dart';
@@ -74,6 +73,7 @@ class VendorOrderDetailsPage extends StatelessWidget {
                   children: [
                     const SvgIcon(icon: CustomIcons.clockSvg, radius: 20, color: Colors.black54),
                     const SizedBox(width: 8),
+                    // ignore: deprecated_member_use
                     Text('Not Delivered', style: TextStyle(color: Colors.black.withOpacity(0.7), fontWeight: FontWeight.w500)),
                   ],
                 ),

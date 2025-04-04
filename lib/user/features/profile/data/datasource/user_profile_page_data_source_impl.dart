@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/user/features/profile/data/datasource/user_profile_page_data_source.dart';
 
@@ -50,7 +51,9 @@ class UserProfilePageDataSourceImpl implements UserProfilePageDataSource {
       codeSent: (verificationId, forceResendingToken) {
         log('assigning the verification id');
         assignTheVerificationId(verificationId: verificationId);
-        print(potentialVerificationId);
+        if (kDebugMode) {
+          print(potentialVerificationId);
+        }
       },
       codeAutoRetrievalTimeout: (verificationId) async {},
     );

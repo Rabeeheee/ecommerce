@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
@@ -82,7 +83,9 @@ class CartPageBottomContainer extends StatelessWidget {
                       child: RoundedRectangularButton(
                         title: 'CHECKOUT',
                         onPressed: () {
-                          print('object');
+                          if (kDebugMode) {
+                            print('object');
+                          }
                           GoRouter.of(context).pushNamed(
                               AppRouteConstants.checkoutPage,
                               pathParameters: {

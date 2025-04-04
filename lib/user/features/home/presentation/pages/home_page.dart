@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/widgets/custom_sliver_appbar.dart';
@@ -51,7 +52,9 @@ class _HomePageState extends State<HomePage> {
                       if (state is TrendingProductLoading) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (state is TrendingProductLoaded) {
-                        print(state.product.productName);
+                        if (kDebugMode) {
+                          print(state.product.productName);
+                        }
                         return ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 900),
                           child: AdvertisementContainer(

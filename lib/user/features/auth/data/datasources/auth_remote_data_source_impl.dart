@@ -139,22 +139,30 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     try {
       // Create a new phoneAuthCredential with the verificationId and otp code received
-      print('start');
+      if (kDebugMode) {
+        print('start');
+      }
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: otpCode,
       );
-      print(phoneAuthCredential.smsCode);
+      if (kDebugMode) {
+        print(phoneAuthCredential.smsCode);
+      }
 
       // Attempt to create user with email and password
       UserCredential userCredential = await createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      print(userCredential.user!.email ?? userCredential.user!.phoneNumber);
+      if (kDebugMode) {
+        print(userCredential.user!.email ?? userCredential.user!.phoneNumber);
+      }
 
       User? user = userCredential.user;
-      print(user != null);
+      if (kDebugMode) {
+        print(user != null);
+      }
       if (user != null) {
         // Link the phone credential with the newly created user
         await user.linkWithCredential(phoneAuthCredential);

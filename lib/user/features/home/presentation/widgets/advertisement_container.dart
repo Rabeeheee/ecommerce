@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,6 +46,7 @@ class AdvertisementCard extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.grey.withOpacity(0.4),
                 spreadRadius: 2,
                 blurRadius: 8,
@@ -171,9 +173,11 @@ class AdvertisementCard extends StatelessWidget {
                           imageUrl:
                               trendingProduct!.productImageURL,
                           imageBuilder: (context, imageProvider) {
-                            print(
+                            if (kDebugMode) {
+                              print(
                               "Image loaded successfully: ${trendingProduct!.productImageURL}",
                             );
+                            }
                             
                             return Image(
                               image: imageProvider,
@@ -183,8 +187,12 @@ class AdvertisementCard extends StatelessWidget {
                             );
                           },
                           placeholder: (context, url) {
-                            print("Loading image: $url");
-                            print("Final Image URL: ${Uri.encodeFull(trendingProduct!.productImageURL)}");
+                            if (kDebugMode) {
+                              print("Loading image: $url");
+                            }
+                            if (kDebugMode) {
+                              print("Final Image URL: ${Uri.encodeFull(trendingProduct!.productImageURL)}");
+                            }
 
                             return Shimmer.fromColors(
                               baseColor: Colors.grey.shade100,
@@ -197,8 +205,10 @@ class AdvertisementCard extends StatelessWidget {
                             );
                           },
                           errorWidget: (context, url, error) {
-                            print("Error loading image: $url, Error: $error");
-                            return Image.network(trendingProduct!.productImageURL);
+                            if (kDebugMode) {
+                              print("Error loading image: $url, Error: $error");
+                            }
+                            return Image.asset('assets/images/trending.jpg', fit: BoxFit.cover,);
                           },
                           fit: BoxFit.cover,
                           width: 100,

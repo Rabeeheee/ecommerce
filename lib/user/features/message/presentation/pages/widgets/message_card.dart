@@ -13,6 +13,7 @@ class MessageCard extends StatelessWidget {
         left: 25,
       ),
       child: Card(
+        // ignore: deprecated_member_use
         color: AppPallete.primaryAppColor.withOpacity(0.5),
         elevation: 1,
         shape: RoundedRectangleBorder(
