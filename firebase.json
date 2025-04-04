@@ -1,1 +1,37 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"tech-heaven-7d347","appId":"1:560391679422:android:f18ffc63839780c193ddef","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"tech-heaven-7d347","configurations":{"android":"1:560391679422:android:f18ffc63839780c193ddef","ios":"1:560391679422:ios:45efc52b355521e293ddef","web":"1:560391679422:web:229e21ee191f0f9e93ddef"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "tech-heaven-7d347",
+          "appId": "1:560391679422:android:f18ffc63839780c193ddef",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "tech-heaven-7d347",
+          "configurations": {
+            "android": "1:560391679422:android:f18ffc63839780c193ddef",
+            "ios": "1:560391679422:ios:45efc52b355521e293ddef",
+            "web": "1:560391679422:web:229e21ee191f0f9e93ddef"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

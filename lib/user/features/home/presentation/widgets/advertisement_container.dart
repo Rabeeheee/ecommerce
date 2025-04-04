@@ -169,7 +169,7 @@ class AdvertisementCard extends StatelessWidget {
                       ClipOval(
                         child: CachedNetworkImage(
                           imageUrl:
-                              Uri.encodeFull(trendingProduct!.productImageURL),
+                              trendingProduct!.productImageURL,
                           imageBuilder: (context, imageProvider) {
                             print(
                               "Image loaded successfully: ${trendingProduct!.productImageURL}",
@@ -198,7 +198,7 @@ class AdvertisementCard extends StatelessWidget {
                           },
                           errorWidget: (context, url, error) {
                             print("Error loading image: $url, Error: $error");
-                            return Image.asset('assets/images/trending.jpg', fit: BoxFit.cover,);
+                            return Image.network(trendingProduct!.productImageURL);
                           },
                           fit: BoxFit.cover,
                           width: 100,
